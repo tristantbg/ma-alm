@@ -2,7 +2,7 @@ module.exports = function(grunt) {
     grunt.initConfig({
         concat: {
             plugins: {
-                src: ['site/plugins/oembed/assets/js/oembed.js','lib/history.js/scripts/bundled/html4+html5/jquery.history.js'],
+                src: ['site/plugins/oembed/assets/js/oembed.js', 'node_modules/instafeed.js/instafeed.min.js', 'node_modules/packery/dist/packery.pkgd.min.js', 'node_modules/gsap/src/minified/TweenMax.min.js', 'node_modules/gsap/src/minified/utils/Draggable.min.js', '../libraries/GSAP/ThrowPropsPlugin.min.js', 'lib/history.js/scripts/bundled/html4+html5/jquery.history.js',],
                 dest: 'assets/js/plugins.concat.js'
             },
             js: {

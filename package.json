@@ -12,5 +12,8 @@
     "grunt-php": "*",
     "jeet": "*",
     "rupture": "*"
+  },
+  "dependencies": {
+    "gsap": "^1.19.1"
   }
 }
