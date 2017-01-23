@@ -84,11 +84,18 @@ a, a:hover, a:visited, a:focus
 		height 100vh
 		width 100%
 		overflow hidden
-		// flexbox()
-		// justify-content space-around
-		// flex-wrap wrap
+		flexbox()
+		justify-content space-around
+		//align-items center
+		flex-wrap wrap
 		.grid-item
 			display block
+			background-position center
+			background-repeat no-repeat
+		.grid-item.contain
+			background-size contain
+		.grid-item.cover
+			background-size cover
 		.grid-item.w1
 			width 10%
 		.grid-item.w2
@@ -97,6 +104,14 @@ a, a:hover, a:visited, a:focus
 			width 30%
 		.grid-item.w4
 			width 40%
+		.grid-item.h1
+			height 30%
+		.grid-item.h2
+			height 50%
+		.grid-item.h3
+			height 70%
+		.grid-item.h4
+			height 100%
 	div.black
 		background $secondary
 		color $primary

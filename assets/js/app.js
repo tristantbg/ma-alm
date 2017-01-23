@@ -57,7 +57,7 @@ $(function() {
         generateImages: function(num) {
             var data = '';
             for (var i = 0; i < num; i++) {
-                data += '<div class="grid-item w' + imagesWidth.random() + ' h' + imagesWidth.random() + '"><img src="' + collection.random() + '" width="100%" height="auto" /></div>'
+                data += '<div class="grid-item ' + ['contain','cover'].random() + ' w' + imagesWidth.random() + ' h' + imagesWidth.random() + '" style="background-image: url(' + collection.random() + ')" /></div>';
             }
             return data;
         },
