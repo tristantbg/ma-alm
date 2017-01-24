@@ -3,12 +3,12 @@
 <div id="container">
   <div id="target">
     <div id="top">
-    	<div class="view out"></div>
-    	<div class="view inside"></div>
+    	<div id="out-1" class="view out"></div>
+    	<div id="inside-1" class="view inside"></div>
     </div>
     <div id="bottom">
-    	<div class="view inside"></div>
-    	<div class="view out"></div>
+    	<div id="inside-2" class="view inside"></div>
+    	<div id="out-2" class="view out"></div>
     </div>
   </div>
   <div id="proxy"></div>
