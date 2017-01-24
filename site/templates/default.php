@@ -3,12 +3,12 @@
 <div id="container">
   <div id="target">
     <div id="top">
-    	<div class="view out"></div>
-    	<div class="view inside"></div>
+    	<div id="out-1" class="view out"></div>
+    	<div id="in-1" class="view inside"></div>
     </div>
     <div id="bottom">
-    	<div class="view inside"></div>
-    	<div class="view out"></div>
+    	<div id="in-2" class="view inside"></div>
+    	<div id="out-2" class="view out"></div>
     </div>
   </div>
   <div id="proxy"></div>
@@ -16,7 +16,7 @@
 
 <?php 
 $collectionImg = $pages->find('home')->images()->shuffle();
-$thumbSize = 1000;
+$thumbSize = 1500;
 
 $collection = [];
 foreach($collectionImg as $key => $img):

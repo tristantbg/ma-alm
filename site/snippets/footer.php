@@ -10,7 +10,7 @@
   </script>
 <?php endif ?>
 	<script>
-		var $sitetitle = '<?= $site->title()->html() ?>';
+		var $sitetitle = '<?= $site->title()->escape() ?>';
 	</script>
 	<?php
 	echo js(array('assets/js/build/plugins.js', 'assets/js/build/app.min.js'));

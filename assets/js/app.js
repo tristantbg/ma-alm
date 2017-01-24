@@ -34,8 +34,8 @@ $(function() {
                 // feed.run();
                 out1 = document.getElementById('out-1');
                 out2 = document.getElementById('out-2');
-                in1 = document.getElementById('inside-1');
-                in2 = document.getElementById('inside-2');
+                in1 = document.getElementById('in-1');
+                in2 = document.getElementById('in-2');
                 app.changeInside();
                 app.changeOutside();
                 // $('.view').packery({
