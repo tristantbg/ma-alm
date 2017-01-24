@@ -81,13 +81,13 @@ $(function() {
 
             function update() {
                 //make sure the y value is always between 0 and -400
-                var maxH = height * 3;
+                var maxH = height * 6;
                 var newY = this.y % maxH;
                 var position = Math.abs(newY / height);
                 if (newY > 0) {
                     newY = newY - maxH;
                 }
-                if (position >= 0 && position < 1 || position >= 2 && position < 3) {
+                if (position >= 0 && position < 2 || position >= 4 && position < 6) {
                     console.log(position + ' OUT');
                     if (position < 0.05) {
                         if (!inChanged) {
@@ -100,7 +100,7 @@ $(function() {
                     }
                 } else {
                     console.log(position + ' IN');
-                    if (position > 1.5 && position < 1.55) {
+                    if (position > 3 && position < 3.05) {
                         if (!outChanged) {
                             console.log('change OUT');
                             app.changeOutside();
