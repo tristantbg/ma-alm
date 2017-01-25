@@ -77,12 +77,16 @@ a, a:hover, a:visited, a:focus
 #proxy
 	display none
 
-#target 
+#target
+	width 400%
+	div.column
+		display block
+		float left
+		width 100vw
 	div.view
 		position relative
 		min-height 200vh
 		height 200vh
-		width 100%
 		overflow hidden
 		//flexbox()
 		//justify-content space-around
@@ -90,6 +94,7 @@ a, a:hover, a:visited, a:focus
 		//flex-wrap wrap
 		.grid-item
 			//display block
+			background-size cover
 			background-position center
 			background-repeat no-repeat
 			//border 1px solid rgba(0,0,0,0.1)
@@ -116,3 +121,13 @@ a, a:hover, a:visited, a:focus
 	div.black
 		background $secondary
 		color $primary
+
+#target.contain
+	div.view
+		.grid-item
+			background-size contain
+
+#target.outlines
+	div.view
+		.grid-item
+			border 1px solid rgba(0,0,0,0.2)
