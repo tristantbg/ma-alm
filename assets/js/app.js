@@ -1,14 +1,15 @@
 /* globals $:false */
 var width = $(window).width(),
     height = $(window).height(),
-    minBoxes = 3, maxBoxes = 10,
+    minBoxes = 10,
+    maxBoxes = 15,
     l_in1, l_in2, l_out1, l_out2,
     r_in1, r_in2, r_out1, r_out2,
     ref, clone,
     inChanged, outChanged,
     backgroundPosition = ['top left', 'bottom left', 'center', 'top right', 'bottom right'],
     lastX,
-    imagesWidth = [1, 2, 3, 4],
+    imagesWidth = [1, 2, 3],
     isMobile = false,
     $root = '/';
 $(function() {
@@ -46,8 +47,8 @@ $(function() {
                 r_out2 = document.getElementById('r-out-2');
                 ref = document.getElementById('reference');
                 clone = document.getElementById('clone');
-                app.changeInside();
-                app.changeOutside();
+                app.changeInsideFloat();
+                app.changeOutsideFloat();
                 // $('.view').packery({
                 //     // options
                 //     itemSelector: '.grid-item',
@@ -72,7 +73,7 @@ $(function() {
         generateImages: function(num) {
             var data = '';
             for (var i = 0; i < num; i++) {
-                data += '<div class="grid-item ' + ['contain', 'cover'].random() + ' w' + imagesWidth.random() + ' h' + imagesWidth.random() + '" style="background-image: url(' + collection.random() + ')" /></div>';
+                data += '<div class="grid-item w' + imagesWidth.random() + '"><img src="' + collection.random() + '" width="100%" height="auto" /></div>';
             }
             return data;
         },
@@ -91,6 +92,21 @@ $(function() {
             }
             app.cloneColumns();
         },
+        changeInsideFloat: function(side) {
+            if (side == 'left') {
+                fillWithChilds(l_in1, rand(minBoxes, maxBoxes));
+                fillWithChilds(l_in2, rand(minBoxes, maxBoxes));
+            } else if (side == 'right') {
+                fillWithChilds(r_in1, rand(minBoxes, maxBoxes));
+                fillWithChilds(r_in2, rand(minBoxes, maxBoxes));
+            } else {
+                l_in1.innerHTML = app.generateImages(rand(minBoxes, maxBoxes));
+                l_in2.innerHTML = app.generateImages(rand(minBoxes, maxBoxes));
+                r_in1.innerHTML = app.generateImages(rand(minBoxes, maxBoxes));
+                r_in2.innerHTML = app.generateImages(rand(minBoxes, maxBoxes));
+            }
+            app.cloneColumns();
+        },
         changeOutside: function(side) {
             if (side == 'left') {
                 fillWithChilds(l_out1, rand(minBoxes, maxBoxes));
@@ -106,8 +122,23 @@ $(function() {
             }
             app.cloneColumns();
         },
+        changeOutsideFloat: function(side) {
+            if (side == 'left') {
+                fillWithChilds(l_out1, rand(minBoxes, maxBoxes));
+                l_out2.innerHTML = l_out1.innerHTML;
+            } else if (side == 'right') {
+                fillWithChilds(r_out1, rand(minBoxes, maxBoxes));
+                r_out2.innerHTML = r_out1.innerHTML;
+            } else {
+                l_out1.innerHTML = app.generateImages(rand(minBoxes, maxBoxes));
+                l_out2.innerHTML = l_out1.innerHTML;
+                r_out1.innerHTML = app.generateImages(rand(minBoxes, maxBoxes));
+                r_out2.innerHTML = r_out1.innerHTML;
+            }
+            app.cloneColumns();
+        },
         cloneColumns: function() {
-          clone.innerHTML = ref.innerHTML;
+            clone.innerHTML = ref.innerHTML;
         },
         startDrag: function() {
             var target = $("#target"),
@@ -127,7 +158,7 @@ $(function() {
                     if (positionY < 0.05) {
                         if (!inChanged) {
                             console.log('change IN');
-                            app.changeInside();
+                            app.changeInsideFloat();
                             inChanged = true;
                         }
                     } else {
@@ -138,7 +169,7 @@ $(function() {
                     if (positionY > 3 && positionY < 3.05) {
                         if (!outChanged) {
                             console.log('change OUT');
-                            app.changeOutside();
+                            app.changeOutsideFloat();
                             outChanged = true;
                         }
                     } else {
@@ -150,7 +181,6 @@ $(function() {
                 var delta = lastX - this.x;
                 var newX = this.x % maxW;
                 var positionX = Math.abs(newX / width);
-                
                 if (newX > 0) {
                     newX = newX - maxW;
                 }
@@ -163,7 +193,6 @@ $(function() {
                 lastX = this.x;
                 this.x = newX;
                 this.y = newY;
-                
             }
             Draggable.create(proxy, {
                 type: 'xy',
