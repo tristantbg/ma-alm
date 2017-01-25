@@ -7,6 +7,19 @@ fields:
   title:
     label: Title
     type:  text
-  text:
-    label: Text
-    type:  textarea
+  contain:
+    label: Contain images
+    type: toggle
+    options: yes/no
+    default: no
+  repeat:
+    label: Repeat images
+    type: toggle
+    help: Only on contain mode
+    options: yes/no
+    default: no
+  outlines:
+    label: Show outlines
+    type: toggle
+    options: yes/no
+    default: no

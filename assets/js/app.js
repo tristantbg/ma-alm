@@ -1,9 +1,13 @@
 /* globals $:false */
 var width = $(window).width(),
     height = $(window).height(),
-    in1, in2, out1, out2,
+    minBoxes = 3, maxBoxes = 10,
+    l_in1, l_in2, l_out1, l_out2,
+    r_in1, r_in2, r_out1, r_out2,
+    ref, clone,
     inChanged, outChanged,
     backgroundPosition = ['top left', 'bottom left', 'center', 'top right', 'bottom right'],
+    lastX,
     imagesWidth = [1, 2, 3, 4],
     isMobile = false,
     $root = '/';
@@ -32,10 +36,16 @@ $(function() {
                 //     accessToken: '234790120.55f62e1.674b375f110240c1ac7daedb74be5b69'
                 // });
                 // feed.run();
-                out1 = document.getElementById('out-1');
-                out2 = document.getElementById('out-2');
-                in1 = document.getElementById('in-1');
-                in2 = document.getElementById('in-2');
+                l_in1 = document.getElementById('l-in-1');
+                l_in2 = document.getElementById('l-in-2');
+                l_out1 = document.getElementById('l-out-1');
+                l_out2 = document.getElementById('l-out-2');
+                r_in1 = document.getElementById('r-in-1');
+                r_in2 = document.getElementById('r-in-2');
+                r_out1 = document.getElementById('r-out-1');
+                r_out2 = document.getElementById('r-out-2');
+                ref = document.getElementById('reference');
+                clone = document.getElementById('clone');
                 app.changeInside();
                 app.changeOutside();
                 // $('.view').packery({
@@ -66,13 +76,38 @@ $(function() {
             }
             return data;
         },
-        changeInside: function() {
-            fillWithChilds(in1, rand(5, 10));
-            fillWithChilds(in2, rand(5, 10));
+        changeInside: function(side) {
+            if (side == 'left') {
+                fillWithChilds(l_in1, rand(minBoxes, maxBoxes));
+                fillWithChilds(l_in2, rand(minBoxes, maxBoxes));
+            } else if (side == 'right') {
+                fillWithChilds(r_in1, rand(minBoxes, maxBoxes));
+                fillWithChilds(r_in2, rand(minBoxes, maxBoxes));
+            } else {
+                fillWithChilds(l_in1, rand(minBoxes, maxBoxes));
+                fillWithChilds(l_in2, rand(minBoxes, maxBoxes));
+                fillWithChilds(r_in1, rand(minBoxes, maxBoxes));
+                fillWithChilds(r_in2, rand(minBoxes, maxBoxes));
+            }
+            app.cloneColumns();
         },
-        changeOutside: function() {
-            fillWithChilds(out1, rand(5, 10));
-            out2.innerHTML = out1.innerHTML;
+        changeOutside: function(side) {
+            if (side == 'left') {
+                fillWithChilds(l_out1, rand(minBoxes, maxBoxes));
+                l_out2.innerHTML = l_out1.innerHTML;
+            } else if (side == 'right') {
+                fillWithChilds(r_out1, rand(minBoxes, maxBoxes));
+                r_out2.innerHTML = r_out1.innerHTML;
+            } else {
+                fillWithChilds(l_out1, rand(minBoxes, maxBoxes));
+                l_out2.innerHTML = l_out1.innerHTML;
+                fillWithChilds(r_out1, rand(minBoxes, maxBoxes));
+                r_out2.innerHTML = r_out1.innerHTML;
+            }
+            app.cloneColumns();
+        },
+        cloneColumns: function() {
+          clone.innerHTML = ref.innerHTML;
         },
         startDrag: function() {
             var target = $("#target"),
@@ -80,16 +115,16 @@ $(function() {
                 container = $("#container");
 
             function update() {
-                //make sure the y value is always between 0 and -400
+                //Calcute Y
                 var maxH = height * 6;
                 var newY = this.y % maxH;
-                var position = Math.abs(newY / height);
+                var positionY = Math.abs(newY / height);
                 if (newY > 0) {
                     newY = newY - maxH;
                 }
-                if (position >= 0 && position < 2 || position >= 4 && position < 6) {
-                    console.log(position + ' OUT');
-                    if (position < 0.05) {
+                if (positionY >= 0 && positionY < 2 || positionY >= 4 && positionY < 6) {
+                    console.log(positionY + ' OUT');
+                    if (positionY < 0.05) {
                         if (!inChanged) {
                             console.log('change IN');
                             app.changeInside();
@@ -99,8 +134,8 @@ $(function() {
                         inChanged = false;
                     }
                 } else {
-                    console.log(position + ' IN');
-                    if (position > 3 && position < 3.05) {
+                    console.log(positionY + ' IN');
+                    if (positionY > 3 && positionY < 3.05) {
                         if (!outChanged) {
                             console.log('change OUT');
                             app.changeOutside();
@@ -110,16 +145,31 @@ $(function() {
                         outChanged = false;
                     }
                 }
+                //Calcute X
+                var maxW = width * 2;
+                var delta = lastX - this.x;
+                var newX = this.x % maxW;
+                var positionX = Math.abs(newX / width);
+                
+                if (newX > 0) {
+                    newX = newX - maxW;
+                }
+                //place target
                 TweenLite.set(target, {
+                    x: newX,
                     y: newY,
                     overwrite: false
                 });
+                lastX = this.x;
+                this.x = newX;
                 this.y = newY;
+                
             }
             Draggable.create(proxy, {
-                type: 'y',
+                type: 'xy',
                 trigger: container,
-                //dragResistance: 0.5,
+                zIndexBoost: false,
+                dragResistance: 0.3,
                 onDrag: update,
                 onThrowUpdate: update,
                 throwProps: true
@@ -170,7 +220,7 @@ function fillWithChilds(el, N) {
     function main(N, x, y, hei, wid) {
         if (N === 1) {
             var child = document.createElement('div');
-            child.className = 'grid-item cover';
+            child.className = 'grid-item';
             child.setAttribute('style', 'position: absolute; background-image: url(' + collection.random() + '); background-position: ' + backgroundPosition.random() + '; top:' + y + 'px; left:' + x + 'px; height:' + hei + 'px; width:' + wid + 'px');
             el.appendChild(child);
             return;
