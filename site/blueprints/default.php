@@ -12,6 +12,12 @@ fields:
     type: toggle
     options: yes/no
     default: no
+  repeat:
+    label: Repeat images
+    type: toggle
+    help: Only on contain mode
+    options: yes/no
+    default: no
   outlines:
     label: Show outlines
     type: toggle

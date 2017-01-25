@@ -1,7 +1,11 @@
 <?php snippet('header') ?>
 
+<header>
+	<img src="<?= url('assets/images/logo.png') ?>" alt="" width="200px">
+</header>
+
 <div id="container">
-  <div id="target" class="<?php e($page->contain()->bool(),'contain '); e($page->outlines()->bool(),'outlines') ?>">
+  <div id="target" class="<?php e($page->contain()->bool(),'contain'); e($page->outlines()->bool(),' outlines'); e($page->repeat()->bool(),' repeat') ?>">
   	<div id="reference">
 		<div id="col-1" class="column left">
 			<div id="l-out-1" class="view out"></div>

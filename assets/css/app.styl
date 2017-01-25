@@ -66,6 +66,16 @@ a, a:hover, a:visited, a:focus
 	background-size 15px
 	z-index 10000
 
+header
+	position fixed
+	width 100%
+	top 15px
+	text-align center
+	z-index 100
+	pointer-events none
+	img
+		display inline-block
+
 #container
 	overflow hidden
 	height 100vh
@@ -126,6 +136,11 @@ a, a:hover, a:visited, a:focus
 	div.view
 		.grid-item
 			background-size contain
+
+#target.contain.repeat
+	div.view
+		.grid-item
+			background-repeat repeat
 
 #target.outlines
 	div.view

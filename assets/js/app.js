@@ -1,6 +1,7 @@
 /* globals $:false */
 var width = $(window).width(),
     height = $(window).height(),
+    minBoxes = 3, maxBoxes = 10,
     l_in1, l_in2, l_out1, l_out2,
     r_in1, r_in2, r_out1, r_out2,
     ref, clone,
@@ -77,30 +78,30 @@ $(function() {
         },
         changeInside: function(side) {
             if (side == 'left') {
-                fillWithChilds(l_in1, rand(5, 10));
-                fillWithChilds(l_in2, rand(5, 10));
+                fillWithChilds(l_in1, rand(minBoxes, maxBoxes));
+                fillWithChilds(l_in2, rand(minBoxes, maxBoxes));
             } else if (side == 'right') {
-                fillWithChilds(r_in1, rand(5, 10));
-                fillWithChilds(r_in2, rand(5, 10));
+                fillWithChilds(r_in1, rand(minBoxes, maxBoxes));
+                fillWithChilds(r_in2, rand(minBoxes, maxBoxes));
             } else {
-                fillWithChilds(l_in1, rand(5, 10));
-                fillWithChilds(l_in2, rand(5, 10));
-                fillWithChilds(r_in1, rand(5, 10));
-                fillWithChilds(r_in2, rand(5, 10));
+                fillWithChilds(l_in1, rand(minBoxes, maxBoxes));
+                fillWithChilds(l_in2, rand(minBoxes, maxBoxes));
+                fillWithChilds(r_in1, rand(minBoxes, maxBoxes));
+                fillWithChilds(r_in2, rand(minBoxes, maxBoxes));
             }
             app.cloneColumns();
         },
         changeOutside: function(side) {
             if (side == 'left') {
-                fillWithChilds(l_out1, rand(5, 10));
+                fillWithChilds(l_out1, rand(minBoxes, maxBoxes));
                 l_out2.innerHTML = l_out1.innerHTML;
             } else if (side == 'right') {
-                fillWithChilds(r_out1, rand(5, 10));
+                fillWithChilds(r_out1, rand(minBoxes, maxBoxes));
                 r_out2.innerHTML = r_out1.innerHTML;
             } else {
-                fillWithChilds(l_out1, rand(5, 10));
+                fillWithChilds(l_out1, rand(minBoxes, maxBoxes));
                 l_out2.innerHTML = l_out1.innerHTML;
-                fillWithChilds(r_out1, rand(5, 10));
+                fillWithChilds(r_out1, rand(minBoxes, maxBoxes));
                 r_out2.innerHTML = r_out1.innerHTML;
             }
             app.cloneColumns();
@@ -167,7 +168,8 @@ $(function() {
             Draggable.create(proxy, {
                 type: 'xy',
                 trigger: container,
-                //dragResistance: 0.5,
+                zIndexBoost: false,
+                dragResistance: 0.3,
                 onDrag: update,
                 onThrowUpdate: update,
                 throwProps: true
