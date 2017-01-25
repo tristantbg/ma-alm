@@ -11,6 +11,8 @@
 <?php endif ?>
 	<script>
 		var $sitetitle = '<?= $site->title()->escape() ?>';
+		var minBoxes = <?= $page->minboxes() ?>;
+		var maxBoxes = <?= $page->maxboxes() ?>;
 	</script>
 	<?php
 	echo js(array('assets/js/build/plugins.js', 'assets/js/build/app.min.js'));

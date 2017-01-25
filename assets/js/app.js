@@ -1,7 +1,6 @@
 /* globals $:false */
 var width = $(window).width(),
     height = $(window).height(),
-    minBoxes = 3, maxBoxes = 10,
     l_in1, l_in2, l_out1, l_out2,
     r_in1, r_in2, r_out1, r_out2,
     ref, clone,
@@ -16,6 +15,8 @@ $(function() {
         init: function() {
             $(window).resize(function(event) {
                 app.sizeSet();
+                app.changeInside();
+                app.changeOutside();
             });
             $(document).ready(function($) {
                 $body = $('body');
