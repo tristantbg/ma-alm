@@ -41,6 +41,14 @@ p
 p:last-child
 	margin-bottom 0
 
+.grid-item.lazy
+	//transition(opacity, 250ms, ease)
+	backface()
+	opacity 0
+
+.grid-item.lazy.lazyloaded
+	opacity 1
+
 ::selection
 	background $secondary
 	
@@ -108,29 +116,20 @@ header
 			background-position center
 			background-repeat no-repeat
 			//border 1px solid rgba(0,0,0,0.1)
+		.grid-item.insta
+			filter(grayscale(1))
+			text-align center
+			img
+				display inline-block
+				max-width 100%
+				max-height 100%
+				align()
+		.grid-item.insta:hover
+			filter(none)
 		.grid-item.contain
 			background-size contain
 		.grid-item.cover
 			background-size cover
-		.grid-item.w1
-			width 10%
-		.grid-item.w2
-			width 20%
-		.grid-item.w3
-			width 30%
-		.grid-item.w4
-			width 40%
-		.grid-item.h1
-			height 30%
-		.grid-item.h2
-			height 50%
-		.grid-item.h3
-			height 70%
-		.grid-item.h4
-			height 100%
-	div.black
-		background $secondary
-		color $primary
 
 #target.contain
 	div.view

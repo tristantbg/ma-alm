@@ -15,7 +15,7 @@ RewriteEngine on
 # Set the RewriteBase to:
 #
 
-RewriteBase /marquesalmeida
+# RewriteBase /marquesalmeida
 
 # block text files in the content folder from being accessed directly
 RewriteRule ^content/(.*)\.(txt|md|mdown)$ index.php [L]

@@ -38,27 +38,9 @@
   <div id="proxy"></div>
 </div>
 
-<?php 
-$collectionImg = $pages->find('home')->images()->shuffle();
-$thumbSize = 1500;
-
-$collectionPortrait = [];
-$collectionLandscape = [];
-foreach($collectionImg as $key => $img):
-	$srcset = '';
-	for ($i = 500; $i <= 2500; $i += 500) $srcset .= resizeOnDemand($img, $i) . ' ' . $i . 'w,';
-	//$url = thumb($img, array('width'=> $thumbSize))->url();
-	if ($img->orientation() == 'portrait') {
-		array_push($collectionPortrait, $srcset);
-	} else {
-		array_push($collectionLandscape, $srcset);
-	}
-endforeach;
-?>
-
 <script>
-	var collection = {'landscape':<?= json_encode($collectionLandscape) ?>, 'portrait': <?= json_encode($collectionPortrait) ?>};
-	var instamode = false;
+	var instamode = true;
+	var hashtag = "<?= $page->hashtag() ?>";
 </script>
 
 <?php snippet('footer') ?>
