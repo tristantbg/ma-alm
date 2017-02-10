@@ -10,7 +10,7 @@ var width = $(window).width(),
     imagesWidth = [1, 2, 3, 4],
     isMobile = false,
     instacollection = [],
-    instaInit = 0,
+    instaInit = true,
     idx = 0,
     token = '234790120.55f62e1.674b375f110240c1ac7daedb74be5b69',
     num_photos = 20,
@@ -78,16 +78,15 @@ $(function() {
         },
         getInstaImages: function() {
             if (instamode) {
-                var url;
-                if (nextUrl && instaInit) {
-                    url = nextUrl;
-                } else {
-                    url = 'https://api.instagram.com/v1/tags/' + hashtag + '/media/recent';
-                    instaInit = true;
+                if (instaInit) {
+                    nextUrl = 'https://api.instagram.com/v1/tags/' + hashtag + '/media/recent';
+                    instaInit = false;
                 }
-                if (url) {
+                console.log(nextUrl);
+                if (nextUrl) {
+                    console.log("loadNext");
                     $.ajax({
-                        url: url,
+                        url: nextUrl,
                         dataType: 'jsonp',
                         type: 'GET',
                         data: {
@@ -99,7 +98,12 @@ $(function() {
                             for (var x = 0; x < data.data.length; x++) {
                                 instacollection.push(data.data[x].images.standard_resolution.url);
                             }
-                            nextUrl = data.pagination.next_url;
+                            console.log(instacollection);
+                            if (typeof data.pagination.next_url !== typeof undefined) {
+                                nextUrl = data.pagination.next_url;
+                            } else {
+                                nextUrl = false;
+                            }
                             app.changeInside();
                             app.changeOutside();
                         },
@@ -119,8 +123,7 @@ $(function() {
             return div;
         },
         changeInside: function(side) {
-            //app.getInstaImages();
-            console.log("load");
+            app.getInstaImages();
             if (side == 'left') {
                 app.fillWithChilds(l_in1, rand(minBoxes, maxBoxes));
                 app.fillWithChilds(l_in2, rand(minBoxes, maxBoxes));
@@ -141,8 +144,7 @@ $(function() {
             //app.cloneColumns();
         },
         changeOutside: function(side) {
-           // app.getInstaImages();
-           console.log("load");
+            app.getInstaImages();
             if (side == 'left') {
                 app.fillWithChilds(l_out1, rand(minBoxes, maxBoxes));
                 l_out2.innerHTML = l_out1.innerHTML;
@@ -263,12 +265,10 @@ $(function() {
                             idx = 0;
                         }
                         url = instacollection[idx];
-                        child.className = 'grid-item insta';
-                        var image = document.createElement('img');
-                        image.className = 'lazy lazyload';
-                        image.setAttribute('data-src', url);
-                        child.appendChild(image);
-                        console.log(idx);
+                        child.className = 'grid-item insta lazy lazyload ' + orient;
+                        child.setAttribute('style', 'background-image: url(' + url + '); position: absolute; top:' + y + 'px; left:' + x + 'px; height:' + hei + 'px; width:' + wid + 'px');
+                        //child.setAttribute('data-bg', url);
+                        //console.log(idx);
                         idx++;
                     } else {
                         child.className = 'grid-item lazy lazyload ' + orient;
