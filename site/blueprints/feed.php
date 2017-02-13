@@ -7,9 +7,12 @@ fields:
   title:
     label: Title
     type:  text
+    width: 1/2
   hashtag:
     label: Hashtag
     type:  text
+    icon: code
+    width: 1/2
   minboxes:
     label: Min boxes
     type: number
