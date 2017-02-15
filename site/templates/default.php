@@ -45,13 +45,15 @@ $thumbSize = 1500;
 $collectionPortrait = [];
 $collectionLandscape = [];
 foreach($collectionImg as $key => $img):
-	$srcset = '';
-	for ($i = 500; $i <= 2500; $i += 500) $srcset .= resizeOnDemand($img, $i) . ' ' . $i . 'w,';
+	//$srcset = '';
+	//for ($i = 500; $i <= 2500; $i += 500) $srcset .= resizeOnDemand($img, $i) . ' ' . $i . 'w,';
 	//$url = thumb($img, array('width'=> $thumbSize))->url();
 	if ($img->orientation() == 'portrait') {
-		array_push($collectionPortrait, $srcset);
+		//array_push($collectionPortrait, $srcset);
+		array_push($collectionPortrait, resizeOnDemand($img, $thumbSize));
 	} else {
-		array_push($collectionLandscape, $srcset);
+		//array_push($collectionLandscape, $srcset);
+		array_push($collectionLandscape, resizeOnDemand($img, $thumbSize));
 	}
 endforeach;
 ?>

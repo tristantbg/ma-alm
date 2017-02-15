@@ -9,6 +9,7 @@ var width = $(window).width(),
     lastX,
     imagesWidth = [1, 2, 3, 4],
     isMobile = false,
+    collection,
     instacollection = [],
     instaInit = true,
     idx = 0,
@@ -57,6 +58,7 @@ $(function() {
                 if (instamode) {
                     app.getInstaImages();
                 } else {
+                    collection.all = collection.landscape.concat(collection.portrait);
                     app.changeInside();
                     app.changeOutside();
                 }
@@ -247,33 +249,36 @@ $(function() {
                 if (N === 1) {
                     var url;
                     var orient;
-                    if (hei / wid > 1) {
-                        orient = 'portrait';
-                        if (!instamode) {
-                            url = collection.portrait.random();
-                        }
-                    } else {
-                        orient = 'landscape';
-                        if (!instamode) {
-                            url = collection.landscape.random();
-                        }
-                    }
                     var child = document.createElement('div');
-                    child.setAttribute('style', 'position: absolute; top:' + y + 'px; left:' + x + 'px; height:' + hei + 'px; width:' + wid + 'px');
+  
                     if (instamode) {
                         if (idx > instacollection.length - 1) {
                             idx = 0;
                         }
                         url = instacollection[idx];
-                        child.className = 'grid-item insta lazy lazyload ' + orient;
+                        child.className = 'grid-item insta';
                         child.setAttribute('style', 'background-image: url(' + url + '); position: absolute; top:' + y + 'px; left:' + x + 'px; height:' + hei + 'px; width:' + wid + 'px');
                         //child.setAttribute('data-bg', url);
                         //console.log(idx);
                         idx++;
                     } else {
-                        child.className = 'grid-item lazy lazyload ' + orient;
-                        child.setAttribute('data-bgset', url);
-                        child.setAttribute('data-sizes', 'auto');
+                        //url = collection.all.random();
+                        if (hei / wid > 1) {
+                            orient = 'portrait';
+                            if (!instamode) {
+                                url = collection.portrait.random();
+                            }
+                        } else {
+                            orient = 'landscape';
+                            if (!instamode) {
+                                url = collection.landscape.random();
+                            }
+                        }
+                        child.setAttribute('style', 'background-image: url(' + url + '); position: absolute; top:' + y + 'px; left:' + x + 'px; height:' + hei + 'px; width:' + wid + 'px');
+                        child.className = 'grid-item';
+                        //child.setAttribute('data-bg', url);
+                        //child.setAttribute('data-expand', 1000);
+                        //child.setAttribute('data-sizes', 'auto');
                     }
                     el.appendChild(child);
                     return;
