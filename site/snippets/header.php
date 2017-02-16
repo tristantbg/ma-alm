@@ -58,14 +58,7 @@
 	
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 	<script>window.jQuery || document.write('<script src="<?= url('assets/js/vendor/jquery.min.js') ?>">\x3C/script>')</script>
-	<script>
-    function loadJS(u){var r=document.getElementsByTagName("script")[0],s=document.createElement("script");s.src=u;r.parentNode.insertBefore(s,r);}
-
-    if(!window.HTMLPictureElement || !('sizes' in document.createElement('img'))){
-        loadJS("<?php url('assets/js/vendor/') ?>ls.respimg.min.js");
-    }
-	</script>
-
+	
 	<?php if(!$site->customcss()->empty()): ?>
 		<style type="text/css">
 			<?php echo $site->customcss()->html() ?>
