@@ -44,7 +44,7 @@ module.exports = function(grunt) {
         },
         watch: {
             js: {
-                files: ['lib/**/*.js', 'assets/js/**/!(app.min|app.concat).js'],
+                files: ['lib/**/*.js', 'assets/js/app.js'],
                 tasks: ['javascript'],
                 options: {
                     livereload: true,

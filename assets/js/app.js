@@ -37,6 +37,23 @@ $(function() {
                 //         app.loadContent(State.url + '/ajax', slidecontainer);
                 //     }
                 // });
+                $('body.home #container .inner').click(function(event) {
+                    $body.addClass('menu-visible');
+                });
+                $body.on('click', '[data-target="index"]', function(event) {
+                  event.preventDefault();
+                    if ($body.attr('class') != 'home') {
+                        $body.toggleClass('menu-visible');
+                    }
+                });
+                $body.on('click', '[data-target="page"]', function(event) {
+                  event.preventDefault();
+                  var url = $(this).attr('href');
+                  $body.addClass('loading');
+                    setTimeout(function() {
+                        window.location = url;
+                    }, 1300);
+                });
                 ref = document.getElementById('reference');
                 l_in1 = document.getElementById('l-in-1');
                 l_in2 = document.getElementById('l-in-2');
@@ -57,14 +74,16 @@ $(function() {
                 c_r_out2 = document.getElementById('c_r-out-2');
                 if (instamode) {
                     app.getInstaImages();
-                } else {
+                    app.startDrag();
+                }
+                if (collectionmode) {
                     collection.all = collection.landscape.concat(collection.portrait);
                     app.changeInside();
                     app.changeOutside();
+                    app.startDrag();
                 }
-                app.startDrag();
                 $(window).load(function() {
-                    $(".loader").fadeOut("fast");
+                    $("#loader").fadeOut("fast");
                 });
             });
         },
@@ -75,6 +94,7 @@ $(function() {
             if (isMobile) {
                 if (width >= 770) {
                     //location.reload();
+                    isMobile = false;
                 }
             }
         },
@@ -116,13 +136,6 @@ $(function() {
                     });
                 }
             }
-        },
-        generateImages: function(num) {
-            var div = '';
-            for (var i = 0; i < num; i++) {
-                div += '<div class="grid-item ' + ['contain', 'cover'].random() + ' w' + imagesWidth.random() + ' h' + imagesWidth.random() + '" style="background-image: url(' + collection.random() + ')" /></div>';
-            }
-            return div;
         },
         changeInside: function(side) {
             app.getInstaImages();
@@ -229,7 +242,7 @@ $(function() {
                 type: 'xy',
                 trigger: container,
                 zIndexBoost: false,
-                dragResistance: 0.4,
+                dragResistance: 0.6,
                 onDrag: update,
                 onThrowUpdate: update,
                 throwProps: true
@@ -250,7 +263,6 @@ $(function() {
                     var url;
                     var orient;
                     var child = document.createElement('div');
-  
                     if (instamode) {
                         if (idx > instacollection.length - 1) {
                             idx = 0;
@@ -261,7 +273,8 @@ $(function() {
                         //child.setAttribute('data-bg', url);
                         //console.log(idx);
                         idx++;
-                    } else {
+                    }
+                    if (collectionmode) {
                         //url = collection.all.random();
                         if (hei / wid > 1) {
                             orient = 'portrait';
@@ -328,4 +341,55 @@ Array.prototype.random = function() {
 
 function rand(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min);
+}
+//var ctx = canvas.getContext('2d');
+//drawImageProp(ctx, 'http://i.imgur.com/5xZxGCa.jpg', 0, 0, canvas.width, canvas.height, 0.1, 0.5);
+/**
+ * By Ken Fyrstenberg Nilsen
+ *
+ * drawImageProp(context, image [, x, y, width, height [,offsetX, offsetY]])
+ *
+ * If image and context are only arguments rectangle will equal canvas
+ */
+function drawImageProp(ctx, imgUrl, x, y, w, h, offsetX, offsetY) {
+    if (arguments.length === 2) {
+        x = y = 0;
+        w = ctx.canvas.width;
+        h = ctx.canvas.height;
+    }
+    var img = new Image();
+    img.src = imgUrl;
+    img.onload = function() {
+        /// default offset is center
+        offsetX = typeof offsetX === 'number' ? offsetX : 0.5;
+        offsetY = typeof offsetY === 'number' ? offsetY : 0.5;
+        /// keep bounds [0.0, 1.0]
+        if (offsetX < 0) offsetX = 0;
+        if (offsetY < 0) offsetY = 0;
+        if (offsetX > 1) offsetX = 1;
+        if (offsetY > 1) offsetY = 1;
+        var iw = img.width,
+            ih = img.height,
+            r = Math.min(w / iw, h / ih),
+            nw = iw * r, /// new prop. width
+            nh = ih * r, /// new prop. height
+            cx, cy, cw, ch, ar = 1;
+        /// decide which gap to fill    
+        if (nw < w) ar = w / nw;
+        if (nh < h) ar = h / nh;
+        nw *= ar;
+        nh *= ar;
+        /// calc source rectangle
+        cw = iw / (nw / w);
+        ch = ih / (nh / h);
+        cx = (iw - cw) * offsetX;
+        cy = (ih - ch) * offsetY;
+        /// make sure source rectangle is valid
+        if (cx < 0) cx = 0;
+        if (cy < 0) cy = 0;
+        if (cw > iw) cw = iw;
+        if (ch > ih) ch = ih;
+        /// fill image in dest. rectangle
+        ctx.drawImage(img, cx, cy, cw, ch, x, y, w, h);
+    };
 }

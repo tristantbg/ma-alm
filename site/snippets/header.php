@@ -58,7 +58,7 @@
 	
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 	<script>window.jQuery || document.write('<script src="<?= url('assets/js/vendor/jquery.min.js') ?>">\x3C/script>')</script>
-	
+
 	<?php if(!$site->customcss()->empty()): ?>
 		<style type="text/css">
 			<?php echo $site->customcss()->html() ?>
@@ -66,6 +66,32 @@
 	<?php endif ?>
 
 </head>
-<body>
+<body<?php e($page->isHomepage(), ' class="home"') ?>>
 
-<div class="loader"></div>
+<header>
+	<div id="site-title">
+	<a href="<?= $site->url() ?>" data-target="index">
+	<img src="<?= url('assets/images/logo.png') ?>" alt="" width="200px">
+	</a>
+	</div>
+	<div id="menu-top" class="menu-item">
+	<?php $target = $pages->find('collection') ?>
+	<a href="<?= $target->url() ?>" data-title="<?= $target->title()->html() ?>" data-target="page">
+	<img src="<?= url('assets/images/menu1.svg') ?>" alt="" height="100%">
+	</a>
+	</div>
+	<div id="menu-bottom" class="menu-item">
+	<?php $target = $pages->find('feed') ?>
+	<a href="<?= $target->url() ?>" data-title="<?= $target->title()->html() ?>" data-target="page">
+	<img src="<?= url('assets/images/menu2.svg') ?>" alt="" height="100%">
+	</a>
+	</div>
+</header>
+
+<div id="loader">
+	<div class="spinner">
+		<svg class="circular" viewBox="25 25 50 50">
+		<circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="1" stroke-miterlimit="10"></circle>
+		</svg>
+	</div>
+</div>
