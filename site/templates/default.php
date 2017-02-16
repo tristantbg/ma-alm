@@ -50,10 +50,12 @@ foreach($collectionImg as $key => $img):
 	//$url = thumb($img, array('width'=> $thumbSize))->url();
 	if ($img->orientation() == 'portrait') {
 		//array_push($collectionPortrait, $srcset);
-		array_push($collectionPortrait, resizeOnDemand($img, $thumbSize));
+		//array_push($collectionPortrait, resizeOnDemand($img, $thumbSize));
+		array_push($collectionPortrait, $img->url());
 	} else {
 		//array_push($collectionLandscape, $srcset);
-		array_push($collectionLandscape, resizeOnDemand($img, $thumbSize));
+		//array_push($collectionLandscape, resizeOnDemand($img, $thumbSize));
+		array_push($collectionLandscape, $img->url());
 	}
 endforeach;
 ?>
