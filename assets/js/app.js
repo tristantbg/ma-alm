@@ -28,15 +28,6 @@ $(function() {
             $(document).ready(function($) {
                 $body = $('body');
                 app.sizeSet();
-                // History.Adapter.bind(window, 'statechange', function() {
-                //     var State = History.getState();
-                //     console.log(State);
-                //     var content = State.data;
-                //     if (content.type == 'project') {
-                //         $body.addClass('project loading');
-                //         app.loadContent(State.url + '/ajax', slidecontainer);
-                //     }
-                // });
                 $('body.home #container .inner').click(function(event) {
                     $body.addClass('menu-visible');
                 });
@@ -52,7 +43,7 @@ $(function() {
                   $body.addClass('loading');
                     setTimeout(function() {
                         window.location = url;
-                    }, 1300);
+                    }, 1100);
                 });
                 ref = document.getElementById('reference');
                 l_in1 = document.getElementById('l-in-1');
