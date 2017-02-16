@@ -3,6 +3,12 @@ var width = $(window).width(),
     height = $(window).height(),
     l_in1, l_in2, l_out1, l_out2,
     r_in1, r_in2, r_out1, r_out2,
+    canvas_l_in_1,
+    canvas_l_in_2,
+    canvas_l_out_1,
+    canvas_r_out_2,
+    canvas_r_in_1,
+    canvas_r_in_2,
     ref, clone,
     inChanged, outChanged,
     backgroundPosition = ['top left', 'bottom left', 'center', 'top right', 'bottom right'],
@@ -32,37 +38,35 @@ $(function() {
                     $body.addClass('menu-visible');
                 });
                 $body.on('click', '[data-target="index"]', function(event) {
-                  event.preventDefault();
+                    event.preventDefault();
                     if ($body.attr('class') != 'home') {
                         $body.toggleClass('menu-visible');
                     }
                 });
                 $body.on('click', '[data-target="page"]', function(event) {
-                  event.preventDefault();
-                  var url = $(this).attr('href');
-                  $body.addClass('loading');
+                    event.preventDefault();
+                    var url = $(this).attr('href');
+                    $body.addClass('loading');
                     setTimeout(function() {
                         window.location = url;
                     }, 1100);
                 });
                 ref = document.getElementById('reference');
-                l_in1 = document.getElementById('l-in-1');
-                l_in2 = document.getElementById('l-in-2');
-                l_out1 = document.getElementById('l-out-1');
-                l_out2 = document.getElementById('l-out-2');
-                r_in1 = document.getElementById('r-in-1');
-                r_in2 = document.getElementById('r-in-2');
-                r_out1 = document.getElementById('r-out-1');
-                r_out2 = document.getElementById('r-out-2');
+                l_in_1 = document.getElementById('l_in_1');
+                l_in_2 = document.getElementById('l_in_2');
+                l_out_1 = document.getElementById('l_out_1');
+                l_out_2 = document.getElementById('l_out_2');
+                r_in_1 = document.getElementById('r_in_1');
+                r_in_2 = document.getElementById('r_in_2');
+                r_out_1 = document.getElementById('r_out_1');
+                r_out_2 = document.getElementById('r_out_2');
+                canvas_l_in_1 = document.getElementById('canvas_l_in_1').getContext('2d');
+                canvas_l_in_2 = document.getElementById('canvas_l_in_2').getContext('2d');
+                canvas_l_out_1 = document.getElementById('canvas_l_out_1').getContext('2d');
+                canvas_r_out_1 = document.getElementById('canvas_r_out_1').getContext('2d');
+                canvas_r_in_1 = document.getElementById('canvas_r_in_1').getContext('2d');
+                canvas_r_in_2 = document.getElementById('canvas_r_in_2').getContext('2d');
                 clone = document.getElementById('clone');
-                c_l_in1 = document.getElementById('c_l-in-1');
-                c_l_in2 = document.getElementById('c_l-in-2');
-                c_l_out1 = document.getElementById('c_l-out-1');
-                c_l_out2 = document.getElementById('c_l-out-2');
-                c_r_in1 = document.getElementById('c_r-in-1');
-                c_r_in2 = document.getElementById('c_r-in-2');
-                c_r_out1 = document.getElementById('c_r-out-1');
-                c_r_out2 = document.getElementById('c_r-out-2');
                 if (instamode) {
                     app.getInstaImages();
                     app.startDrag();
@@ -81,6 +85,11 @@ $(function() {
         sizeSet: function() {
             width = $(window).width();
             height = $(window).height();
+            var cvs = document.querySelectorAll('canvas');
+            Array.prototype.forEach.call(cvs, function(el, i) {
+                el.setAttribute('width', el.parentNode.clientWidth);
+                el.setAttribute('height', el.parentNode.clientHeight);
+            });
             if (width <= 770 || Modernizr.touch) isMobile = true;
             if (isMobile) {
                 if (width >= 770) {
@@ -128,47 +137,35 @@ $(function() {
                 }
             }
         },
-        changeInside: function(side) {
-            app.getInstaImages();
-            if (side == 'left') {
-                app.fillWithChilds(l_in1, rand(minBoxes, maxBoxes));
-                app.fillWithChilds(l_in2, rand(minBoxes, maxBoxes));
-            } else if (side == 'right') {
-                app.fillWithChilds(r_in1, rand(minBoxes, maxBoxes));
-                app.fillWithChilds(r_in2, rand(minBoxes, maxBoxes));
+        changeInside: function() {
+            if (instamode) {
+                app.getInstaImages();
+                app.fillWithChilds(l_in_1, rand(minBoxes, maxBoxes));
+                app.fillWithChilds(l_in_2, rand(minBoxes, maxBoxes));
+                app.fillWithChilds(r_in_1, rand(minBoxes, maxBoxes));
+                app.fillWithChilds(r_in_2, rand(minBoxes, maxBoxes));
             } else {
-                app.fillWithChilds(l_in1, rand(minBoxes, maxBoxes));
-                app.fillWithChilds(l_in2, rand(minBoxes, maxBoxes));
-                app.fillWithChilds(r_in1, rand(minBoxes, maxBoxes));
-                app.fillWithChilds(r_in2, rand(minBoxes, maxBoxes));
-                //Clone
-                c_l_in1.innerHTML = l_in1.innerHTML;
-                c_l_in2.innerHTML = l_in2.innerHTML;
-                c_r_in1.innerHTML = r_in1.innerHTML;
-                c_r_in2.innerHTML = r_in2.innerHTML;
+                app.fillCanvasWithChilds(canvas_l_in_1, rand(minBoxes, maxBoxes));
+                app.fillCanvasWithChilds(canvas_l_in_2, rand(minBoxes, maxBoxes));
+                app.fillCanvasWithChilds(canvas_r_in_1, rand(minBoxes, maxBoxes));
+                app.fillCanvasWithChilds(canvas_r_in_2, rand(minBoxes, maxBoxes));
             }
-            //app.cloneColumns();
+            app.cloneColumns();
         },
-        changeOutside: function(side) {
-            app.getInstaImages();
-            if (side == 'left') {
-                app.fillWithChilds(l_out1, rand(minBoxes, maxBoxes));
-                l_out2.innerHTML = l_out1.innerHTML;
-            } else if (side == 'right') {
-                app.fillWithChilds(r_out1, rand(minBoxes, maxBoxes));
-                r_out2.innerHTML = r_out1.innerHTML;
+        changeOutside: function() {
+            if (instamode) {
+                app.getInstaImages();
+                app.fillWithChilds(l_out_1, rand(minBoxes, maxBoxes));
+                l_out_2.innerHTML = l_out_1.innerHTML;
+                app.fillWithChilds(r_out_1, rand(minBoxes, maxBoxes));
+                r_out_2.innerHTML = r_out_1.innerHTML;
             } else {
-                app.fillWithChilds(l_out1, rand(minBoxes, maxBoxes));
-                l_out2.innerHTML = l_out1.innerHTML;
-                app.fillWithChilds(r_out1, rand(minBoxes, maxBoxes));
-                r_out2.innerHTML = r_out1.innerHTML;
-                //Clone
-                c_l_out1.innerHTML = l_out1.innerHTML;
-                c_l_out2.innerHTML = l_out2.innerHTML;
-                c_r_out1.innerHTML = r_out1.innerHTML;
-                c_r_out2.innerHTML = r_out2.innerHTML;
+                app.fillCanvasWithChilds(canvas_l_out_1, rand(minBoxes, maxBoxes));
+                l_out_2.innerHTML = l_out_1.innerHTML;
+                app.fillCanvasWithChilds(canvas_r_out_1, rand(minBoxes, maxBoxes));
+                r_out_2.innerHTML = r_out_1.innerHTML;
             }
-            //app.cloneColumns();
+            app.cloneColumns();
         },
         cloneColumns: function() {
             clone.innerHTML = ref.innerHTML;
@@ -238,6 +235,93 @@ $(function() {
                 onThrowUpdate: update,
                 throwProps: true
             });
+        },
+        fillCanvasWithChilds: function(el, N) {
+            function rand(n) {
+                /* weight=100 means no random
+                   weight=0 means totally random  */
+                var weight = 50;
+                return ((weight * n / 2 + n * (100 - weight) * Math.random()) | 0) / 100;
+            }
+
+            function drawImageProp(ctx, imgUrl, x, y, w, h, offsetX, offsetY) {
+                if (arguments.length === 2) {
+                    x = y = 0;
+                    w = ctx.width;
+                    h = ctx.height;
+                }
+                //console.log(ctx);
+                var img = new Image();
+                img.src = imgUrl;
+                img.onload = function() {
+                    /// default offset is center
+                    offsetX = typeof offsetX === 'number' ? offsetX : 0.5;
+                    offsetY = typeof offsetY === 'number' ? offsetY : 0.5;
+                    /// keep bounds [0.0, 1.0]
+                    if (offsetX < 0) offsetX = 0;
+                    if (offsetY < 0) offsetY = 0;
+                    if (offsetX > 1) offsetX = 1;
+                    if (offsetY > 1) offsetY = 1;
+                    var iw = img.width,
+                        ih = img.height,
+                        r = Math.min(w / iw, h / ih),
+                        nw = iw * r, /// new prop. width
+                        nh = ih * r, /// new prop. height
+                        cx, cy, cw, ch, ar = 1;
+                    /// decide which gap to fill    
+                    if (nw < w) ar = w / nw;
+                    if (nh < h) ar = h / nh;
+                    nw *= ar;
+                    nh *= ar;
+                    /// calc source rectangle
+                    cw = iw / (nw / w);
+                    ch = ih / (nh / h);
+                    cx = (iw - cw) * offsetX;
+                    cy = (ih - ch) * offsetY;
+                    /// make sure source rectangle is valid
+                    if (cx < 0) cx = 0;
+                    if (cy < 0) cy = 0;
+                    if (cw > iw) cw = iw;
+                    if (ch > ih) ch = ih;
+                    /// fill image in dest. rectangle
+                    
+                    ctx.drawImage(this, cx, cy, cw, ch, x, y, w, h);
+                };
+            }
+
+            function main(N, x, y, hei, wid) {
+                if (N === 1) {
+                    var url;
+                    var orient;
+                    //url = collection.all.random();
+                    if (hei / wid > 1) {
+                        orient = 'portrait';
+                        if (!instamode) {
+                            url = collection.portrait.random();
+                        }
+                    } else {
+                        orient = 'landscape';
+                        if (!instamode) {
+                            url = collection.landscape.random();
+                        }
+                    }
+                    drawImageProp(el, url, x, y, wid, hei);
+                    return;
+                }
+                var halfN = N / 2 | 0;
+                if (wid > hei) {
+                    var newWid = rand(wid);
+                    if (2 * newWid > wid) halfN = N - halfN;
+                    main(halfN, x, y, hei, newWid);
+                    main(N - halfN, x + newWid, y, hei, wid - newWid);
+                } else {
+                    var newHei = rand(hei);
+                    if (2 * newHei > hei) halfN = N - halfN;
+                    main(halfN, x, y, newHei, wid);
+                    main(N - halfN, x, y + newHei, hei - newHei, wid);
+                }
+            }
+            main(N, 0, 0, el.height, el.width);
         },
         fillWithChilds: function(el, N) {
             el.innerHTML = '';
@@ -332,55 +416,4 @@ Array.prototype.random = function() {
 
 function rand(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min);
-}
-//var ctx = canvas.getContext('2d');
-//drawImageProp(ctx, 'http://i.imgur.com/5xZxGCa.jpg', 0, 0, canvas.width, canvas.height, 0.1, 0.5);
-/**
- * By Ken Fyrstenberg Nilsen
- *
- * drawImageProp(context, image [, x, y, width, height [,offsetX, offsetY]])
- *
- * If image and context are only arguments rectangle will equal canvas
- */
-function drawImageProp(ctx, imgUrl, x, y, w, h, offsetX, offsetY) {
-    if (arguments.length === 2) {
-        x = y = 0;
-        w = ctx.canvas.width;
-        h = ctx.canvas.height;
-    }
-    var img = new Image();
-    img.src = imgUrl;
-    img.onload = function() {
-        /// default offset is center
-        offsetX = typeof offsetX === 'number' ? offsetX : 0.5;
-        offsetY = typeof offsetY === 'number' ? offsetY : 0.5;
-        /// keep bounds [0.0, 1.0]
-        if (offsetX < 0) offsetX = 0;
-        if (offsetY < 0) offsetY = 0;
-        if (offsetX > 1) offsetX = 1;
-        if (offsetY > 1) offsetY = 1;
-        var iw = img.width,
-            ih = img.height,
-            r = Math.min(w / iw, h / ih),
-            nw = iw * r, /// new prop. width
-            nh = ih * r, /// new prop. height
-            cx, cy, cw, ch, ar = 1;
-        /// decide which gap to fill    
-        if (nw < w) ar = w / nw;
-        if (nh < h) ar = h / nh;
-        nw *= ar;
-        nh *= ar;
-        /// calc source rectangle
-        cw = iw / (nw / w);
-        ch = ih / (nh / h);
-        cx = (iw - cw) * offsetX;
-        cy = (ih - ch) * offsetY;
-        /// make sure source rectangle is valid
-        if (cx < 0) cx = 0;
-        if (cy < 0) cy = 0;
-        if (cw > iw) cw = iw;
-        if (ch > ih) ch = ih;
-        /// fill image in dest. rectangle
-        ctx.drawImage(img, cx, cy, cw, ch, x, y, w, h);
-    };
 }
