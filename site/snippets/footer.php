@@ -1,7 +1,3 @@
-<footer>
-	<div id="privacy"><small>Privacy policy</small></div>
-</footer>
-
 <?php if(!$site->googleanalytics()->empty()): ?>
   <!-- Google Analytics-->
   <script>

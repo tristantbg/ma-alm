@@ -22,28 +22,35 @@ $(function() {
         init: function() {
             $(window).resize(function(event) {
                 app.sizeSet();
+                if (typeof minBoxes !== typeof undefined && typeof maxBoxes !== typeof undefined) {
                 app.changeInside();
                 app.changeOutside();
+              }
             });
             $(document).ready(function($) {
                 $body = $('body');
                 app.sizeSet();
-                $('body.home #container .inner').click(function(event) {
-                    $body.addClass('menu-visible');
-                });
                 $body.on('click', '[data-target="index"]', function(event) {
-                  event.preventDefault();
+                    event.preventDefault();
                     if ($body.attr('class') != 'home') {
-                        $body.toggleClass('menu-visible');
+                        if ($body.attr('class') != 'page') {
+                            $body.toggleClass('menu-visible');
+                        } else {
+                            var url = $(this).attr('href');
+                            $body.addClass('loading');
+                            setTimeout(function() {
+                                window.location = url;
+                            }, 1300);
+                        }
                     }
                 });
                 $body.on('click', '[data-target="page"]', function(event) {
-                  event.preventDefault();
-                  var url = $(this).attr('href');
-                  $body.addClass('loading');
+                    event.preventDefault();
+                    var url = $(this).attr('href');
+                    $body.addClass('loading');
                     setTimeout(function() {
                         window.location = url;
-                    }, 1100);
+                    }, 1300);
                 });
                 ref = document.getElementById('reference');
                 l_in1 = document.getElementById('l-in-1');
@@ -55,17 +62,21 @@ $(function() {
                 r_out1 = document.getElementById('r-out-1');
                 r_out2 = document.getElementById('r-out-2');
                 clone = document.getElementById('clone');
-                c_l_in1 = document.getElementById('c_l-in-1');
-                c_l_in2 = document.getElementById('c_l-in-2');
-                c_l_out1 = document.getElementById('c_l-out-1');
-                c_l_out2 = document.getElementById('c_l-out-2');
-                c_r_in1 = document.getElementById('c_r-in-1');
-                c_r_in2 = document.getElementById('c_r-in-2');
-                c_r_out1 = document.getElementById('c_r-out-1');
-                c_r_out2 = document.getElementById('c_r-out-2');
+                // c_l_in1 = document.getElementById('c_l-in-1');
+                // c_l_in2 = document.getElementById('c_l-in-2');
+                // c_l_out1 = document.getElementById('c_l-out-1');
+                // c_l_out2 = document.getElementById('c_l-out-2');
+                // c_r_in1 = document.getElementById('c_r-in-1');
+                // c_r_in2 = document.getElementById('c_r-in-2');
+                // c_r_out1 = document.getElementById('c_r-out-1');
+                // c_r_out2 = document.getElementById('c_r-out-2');
                 if (instamode) {
                     app.getInstaImages();
                     app.startDrag();
+                }
+                if (isMobile && typeof minBoxes !== typeof undefined && typeof maxBoxes !== typeof undefined) {
+                  minBoxes = minBoxes/2;
+                  maxBoxes = maxBoxes/2;
                 }
                 if (collectionmode) {
                     collection.all = collection.landscape.concat(collection.portrait);
@@ -90,85 +101,71 @@ $(function() {
             }
         },
         getInstaImages: function() {
-            if (instamode) {
-                if (instaInit) {
-                    nextUrl = 'https://api.instagram.com/v1/tags/' + hashtag + '/media/recent';
-                    instaInit = false;
-                }
-                console.log(nextUrl);
-                if (nextUrl) {
-                    console.log("loadNext");
-                    $.ajax({
-                        url: nextUrl,
-                        dataType: 'jsonp',
-                        type: 'GET',
-                        data: {
-                            access_token: token,
-                            count: num_photos
-                        },
-                        success: function(data) {
-                            console.log(data);
-                            for (var x = 0; x < data.data.length; x++) {
-                                instacollection.push(data.data[x].images.standard_resolution.url);
-                            }
-                            console.log(instacollection);
-                            if (typeof data.pagination.next_url !== typeof undefined) {
-                                nextUrl = data.pagination.next_url;
-                            } else {
-                                nextUrl = false;
-                            }
-                            app.changeInside();
-                            app.changeOutside();
-                        },
-                        error: function(data) {
-                            console.log(data);
-                            alert("Too much requests...");
+            if (instaInit) {
+                nextUrl = 'https://api.instagram.com/v1/tags/' + hashtag + '/media/recent';
+                instaInit = false;
+            }
+            console.log(nextUrl);
+            if (nextUrl) {
+                console.log("loadNext");
+                $.ajax({
+                    url: nextUrl,
+                    dataType: 'jsonp',
+                    type: 'GET',
+                    data: {
+                        access_token: token,
+                        count: num_photos
+                    },
+                    success: function(data) {
+                        console.log(data);
+                        for (var x = 0; x < data.data.length; x++) {
+                            instacollection.push(data.data[x].images.standard_resolution.url);
                         }
-                    });
-                }
+                        console.log(instacollection);
+                        if (typeof data.pagination.next_url !== typeof undefined) {
+                            nextUrl = data.pagination.next_url;
+                        } else {
+                            nextUrl = false;
+                        }
+                        app.changeInside();
+                        app.changeOutside();
+                    },
+                    error: function(data) {
+                        console.log(data);
+                        alert("Too much requests...");
+                    }
+                });
             }
         },
         changeInside: function(side) {
-            app.getInstaImages();
-            if (side == 'left') {
-                app.fillWithChilds(l_in1, rand(minBoxes, maxBoxes));
-                app.fillWithChilds(l_in2, rand(minBoxes, maxBoxes));
-            } else if (side == 'right') {
-                app.fillWithChilds(r_in1, rand(minBoxes, maxBoxes));
-                app.fillWithChilds(r_in2, rand(minBoxes, maxBoxes));
-            } else {
-                app.fillWithChilds(l_in1, rand(minBoxes, maxBoxes));
-                app.fillWithChilds(l_in2, rand(minBoxes, maxBoxes));
-                app.fillWithChilds(r_in1, rand(minBoxes, maxBoxes));
-                app.fillWithChilds(r_in2, rand(minBoxes, maxBoxes));
-                //Clone
-                c_l_in1.innerHTML = l_in1.innerHTML;
-                c_l_in2.innerHTML = l_in2.innerHTML;
-                c_r_in1.innerHTML = r_in1.innerHTML;
-                c_r_in2.innerHTML = r_in2.innerHTML;
+            if (instamode) {
+                app.getInstaImages();
             }
-            //app.cloneColumns();
+            app.fillWithChilds(l_in1, rand(minBoxes, maxBoxes));
+            app.fillWithChilds(l_in2, rand(minBoxes, maxBoxes));
+            app.fillWithChilds(r_in1, rand(minBoxes, maxBoxes));
+            app.fillWithChilds(r_in2, rand(minBoxes, maxBoxes));
+            //Clone
+            // c_l_in1.innerHTML = l_in1.innerHTML;
+            // c_l_in2.innerHTML = l_in2.innerHTML;
+            // c_r_in1.innerHTML = r_in1.innerHTML;
+            // c_r_in2.innerHTML = r_in2.innerHTML;
+            app.cloneColumns();
         },
         changeOutside: function(side) {
-            app.getInstaImages();
-            if (side == 'left') {
-                app.fillWithChilds(l_out1, rand(minBoxes, maxBoxes));
-                l_out2.innerHTML = l_out1.innerHTML;
-            } else if (side == 'right') {
-                app.fillWithChilds(r_out1, rand(minBoxes, maxBoxes));
-                r_out2.innerHTML = r_out1.innerHTML;
-            } else {
-                app.fillWithChilds(l_out1, rand(minBoxes, maxBoxes));
-                l_out2.innerHTML = l_out1.innerHTML;
-                app.fillWithChilds(r_out1, rand(minBoxes, maxBoxes));
-                r_out2.innerHTML = r_out1.innerHTML;
-                //Clone
-                c_l_out1.innerHTML = l_out1.innerHTML;
-                c_l_out2.innerHTML = l_out2.innerHTML;
-                c_r_out1.innerHTML = r_out1.innerHTML;
-                c_r_out2.innerHTML = r_out2.innerHTML;
+            if (instamode) {
+                app.getInstaImages();
             }
-            //app.cloneColumns();
+            app.fillWithChilds(l_out1, rand(minBoxes, maxBoxes));
+            l_out2.innerHTML = l_out1.innerHTML;
+            app.fillWithChilds(r_out1, rand(minBoxes, maxBoxes));
+            r_out2.innerHTML = r_out1.innerHTML;
+            //Clone
+            // c_l_out1.innerHTML = l_out1.innerHTML;
+            // c_l_out2.innerHTML = l_out2.innerHTML;
+            // c_r_out1.innerHTML = r_out1.innerHTML;
+            // c_r_out2.innerHTML = r_out2.innerHTML;
+            app.cloneColumns();
         },
         cloneColumns: function() {
             clone.innerHTML = ref.innerHTML;
@@ -233,7 +230,7 @@ $(function() {
                 type: 'xy',
                 trigger: container,
                 zIndexBoost: false,
-                dragResistance: 0.6,
+                dragResistance: 0.4,
                 onDrag: update,
                 onThrowUpdate: update,
                 throwProps: true
@@ -332,55 +329,4 @@ Array.prototype.random = function() {
 
 function rand(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min);
-}
-//var ctx = canvas.getContext('2d');
-//drawImageProp(ctx, 'http://i.imgur.com/5xZxGCa.jpg', 0, 0, canvas.width, canvas.height, 0.1, 0.5);
-/**
- * By Ken Fyrstenberg Nilsen
- *
- * drawImageProp(context, image [, x, y, width, height [,offsetX, offsetY]])
- *
- * If image and context are only arguments rectangle will equal canvas
- */
-function drawImageProp(ctx, imgUrl, x, y, w, h, offsetX, offsetY) {
-    if (arguments.length === 2) {
-        x = y = 0;
-        w = ctx.canvas.width;
-        h = ctx.canvas.height;
-    }
-    var img = new Image();
-    img.src = imgUrl;
-    img.onload = function() {
-        /// default offset is center
-        offsetX = typeof offsetX === 'number' ? offsetX : 0.5;
-        offsetY = typeof offsetY === 'number' ? offsetY : 0.5;
-        /// keep bounds [0.0, 1.0]
-        if (offsetX < 0) offsetX = 0;
-        if (offsetY < 0) offsetY = 0;
-        if (offsetX > 1) offsetX = 1;
-        if (offsetY > 1) offsetY = 1;
-        var iw = img.width,
-            ih = img.height,
-            r = Math.min(w / iw, h / ih),
-            nw = iw * r, /// new prop. width
-            nh = ih * r, /// new prop. height
-            cx, cy, cw, ch, ar = 1;
-        /// decide which gap to fill    
-        if (nw < w) ar = w / nw;
-        if (nh < h) ar = h / nh;
-        nw *= ar;
-        nh *= ar;
-        /// calc source rectangle
-        cw = iw / (nw / w);
-        ch = ih / (nh / h);
-        cx = (iw - cw) * offsetX;
-        cy = (ih - ch) * offsetY;
-        /// make sure source rectangle is valid
-        if (cx < 0) cx = 0;
-        if (cy < 0) cy = 0;
-        if (cw > iw) cw = iw;
-        if (ch > ih) ch = ih;
-        /// fill image in dest. rectangle
-        ctx.drawImage(img, cx, cy, cw, ch, x, y, w, h);
-    };
 }

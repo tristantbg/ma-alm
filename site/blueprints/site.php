@@ -5,6 +5,14 @@ fields:
   generalSettings:
     label: Site Settings
     type: headline
+  menu1:
+    label: SVG Menu 1
+    type: textarea
+    icon: code
+  menu2:
+    label: SVG Menu 2
+    type: textarea
+    icon: code
   title:
     label: Title
     type:  text

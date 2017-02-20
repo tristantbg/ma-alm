@@ -66,7 +66,7 @@
 	<?php endif ?>
 
 </head>
-<body<?php e($page->isHomepage(), ' class="home"') ?>>
+<body<?php e($page->isHomepage(), ' class="home"') ?><?php e($page->template() == 'default', ' class="page"') ?>>
 
 <header>
 	<div id="site-title">
@@ -77,16 +77,23 @@
 	<div id="menu-top" class="menu-item">
 	<?php $target = $pages->find('collection') ?>
 	<a href="<?= $target->url() ?>" data-title="<?= $target->title()->html() ?>" data-target="page">
-	<img src="<?= url('assets/images/menu1.svg') ?>" alt="" height="100%">
+	<?= $site->menu1() ?>
 	</a>
 	</div>
 	<div id="menu-bottom" class="menu-item">
 	<?php $target = $pages->find('feed') ?>
 	<a href="<?= $target->url() ?>" data-title="<?= $target->title()->html() ?>" data-target="page">
-	<img src="<?= url('assets/images/menu2.svg') ?>" alt="" height="100%">
+	<?= $site->menu2() ?>
 	</a>
 	</div>
 </header>
+
+<div id="outdated">
+	<div class="inner">
+	<p class="browserupgrade">You are using an <strong>outdated</strong> browser.
+	<br>Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+	</div>
+</div>
 
 <div id="loader">
 	<div class="spinner">
