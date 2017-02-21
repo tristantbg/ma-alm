@@ -13,6 +13,14 @@ fields:
     label: SVG Menu 2
     type: textarea
     icon: code
+  menusmall1:
+    label: SVG Menu Small 1
+    type: textarea
+    icon: code
+  menusmall2:
+    label: SVG Menu Small 2
+    type: textarea
+    icon: code
   title:
     label: Title
     type:  text

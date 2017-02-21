@@ -1,3 +1,11 @@
+<footer>
+	<div id="terms-of-use">
+	<small>
+	<a href="<?= $pages->find('terms-of-use')->url() ?>" data-target="page"><?= $pages->find('terms-of-use')->title()->html() ?></a>
+	</small>
+	</div>
+</footer>
+
 <?php if(!$site->googleanalytics()->empty()): ?>
   <!-- Google Analytics-->
   <script>

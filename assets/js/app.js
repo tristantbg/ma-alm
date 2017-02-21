@@ -13,7 +13,6 @@ var width = $(window).width(),
     instacollection = [],
     instaInit = true,
     idx = 0,
-    token = '234790120.55f62e1.674b375f110240c1ac7daedb74be5b69',
     num_photos = 20,
     nextUrl = false,
     $root = '/';
@@ -22,10 +21,10 @@ $(function() {
         init: function() {
             $(window).resize(function(event) {
                 app.sizeSet();
-                if (typeof minBoxes !== typeof undefined && typeof maxBoxes !== typeof undefined) {
-                app.changeInside();
-                app.changeOutside();
-              }
+                if (!isMobile && typeof minBoxes !== typeof undefined && typeof maxBoxes !== typeof undefined) {
+                    app.changeInside();
+                    app.changeOutside();
+                }
             });
             $(document).ready(function($) {
                 $body = $('body');
@@ -33,24 +32,25 @@ $(function() {
                 $body.on('click', '[data-target="index"]', function(event) {
                     event.preventDefault();
                     if ($body.attr('class') != 'home') {
-                        if ($body.attr('class') != 'page') {
-                            $body.toggleClass('menu-visible');
-                        } else {
-                            var url = $(this).attr('href');
-                            $body.addClass('loading');
-                            setTimeout(function() {
-                                window.location = url;
-                            }, 1300);
-                        }
+                        var url = $(this).attr('href');
+                        $body.addClass('loading');
+                        setTimeout(function() {
+                            window.location = url;
+                        }, 300);
                     }
                 });
                 $body.on('click', '[data-target="page"]', function(event) {
                     event.preventDefault();
-                    var url = $(this).attr('href');
+                    var el = $(this);
+                    if (el.parent().is('.menu-item')) {
+                      $('.menu-item.active').removeClass('active');
+                      el.parent().addClass('active');
+                    }
+                    var url = el.attr('href');
                     $body.addClass('loading');
                     setTimeout(function() {
                         window.location = url;
-                    }, 1300);
+                    }, 300);
                 });
                 ref = document.getElementById('reference');
                 l_in1 = document.getElementById('l-in-1');
@@ -75,8 +75,8 @@ $(function() {
                     app.startDrag();
                 }
                 if (isMobile && typeof minBoxes !== typeof undefined && typeof maxBoxes !== typeof undefined) {
-                  minBoxes = minBoxes/2;
-                  maxBoxes = maxBoxes/2;
+                    minBoxes = minBoxes / 2;
+                    maxBoxes = maxBoxes / 2;
                 }
                 if (collectionmode) {
                     collection.all = collection.landscape.concat(collection.portrait);
@@ -85,7 +85,7 @@ $(function() {
                     app.startDrag();
                 }
                 $(window).load(function() {
-                    $("#loader").fadeOut("fast");
+                    $body.addClass('loaded');
                 });
             });
         },
@@ -102,7 +102,8 @@ $(function() {
         },
         getInstaImages: function() {
             if (instaInit) {
-                nextUrl = 'https://api.instagram.com/v1/tags/' + hashtag + '/media/recent';
+                //nextUrl = 'https://api.instagram.com/v1/tags/' + hashtag + '/media/recent';
+                nextUrl = "https://app.dialogfeed.com/en/snippet/marques-almeida-8301.json?api_key=34f0ab0850234ba585cd68dc2cb6dedc";
                 instaInit = false;
             }
             console.log(nextUrl);
@@ -110,23 +111,32 @@ $(function() {
                 console.log("loadNext");
                 $.ajax({
                     url: nextUrl,
-                    dataType: 'jsonp',
+                    dataType: 'JSON',
                     type: 'GET',
                     data: {
-                        access_token: token,
-                        count: num_photos
+                        //access_token: token,
+                        //count: num_photos
                     },
                     success: function(data) {
                         console.log(data);
-                        for (var x = 0; x < data.data.length; x++) {
-                            instacollection.push(data.data[x].images.standard_resolution.url);
+                        for (var x = 0; x < data.news_feed.posts.post.length; x++) {
+                            var img = data.news_feed.posts.post[x].content.content_picture;
+                            if (typeof img !== typeof undefined) {
+                                instacollection.push(data.news_feed.posts.post[x].content.content_picture);
+                            }
                         }
-                        console.log(instacollection);
-                        if (typeof data.pagination.next_url !== typeof undefined) {
-                            nextUrl = data.pagination.next_url;
-                        } else {
-                            nextUrl = false;
+                        for (var i = instacollection.length - 1; i >= 0; i--) {
+                            if (instacollection[i] === 'https://www.dialogfeed.com/wp-content/uploads/2015/03/FREE-TRIAL-POST-500HD1.png') {
+                                instacollection.splice(i, 1);
+                                //break;
+                            }
                         }
+                        //console.log(instacollection);
+                        // if (typeof data.pagination.next_url !== typeof undefined) {
+                        //     nextUrl = data.pagination.next_url;
+                        // } else {
+                        nextUrl = false;
+                        //}
                         app.changeInside();
                         app.changeOutside();
                     },

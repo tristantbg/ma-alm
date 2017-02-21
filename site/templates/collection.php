@@ -65,13 +65,4 @@ endforeach;
 	var maxBoxes = <?= $page->maxboxes() ?>;
 </script>
 
-<footer>
-	<div id="back"><a href="<?= $site->url() ?>" data-target="page"><small>Back to about</small></a></div>
-	<div id="privacy">
-	<small>
-	<a href="<?= $pages->find('privacy-policy')->url() ?>" data-target="page"><?= $pages->find('privacy-policy')->title()->html() ?></a>
-	</small>
-	</div>
-</footer>
-
 <?php snippet('footer') ?>

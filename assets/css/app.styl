@@ -3,9 +3,10 @@
 @import '_mixins.styl'
 
 // Media queries
-$xl = 1600px
-$lg = 1260px
-$md = 1023px
+$xl = 1500px
+$lg = 1100px
+$tb = 1023px
+$md = 767px
 $sm = 666px
 
 // Colors
@@ -20,7 +21,7 @@ $kinetic = cubic-bezier(0.77, 0, 0.175, 1)
 // CSS Reset
 global-reset()
 
-webfont('UniversLTStdBold', 'UniversLTStdBold', true, 'normal')
+webfont('UniversLTStd', 'UniversLTStd', true, 'normal')
 
 body,html
 	width 100%
@@ -32,7 +33,7 @@ html
 
 body
 	text-rendering optimizeLegibility
-	font-family 'UniversLTStdBold', 'Helvetica', 'Arial', sans-serif
+	font-family 'UniversLTStd', 'Helvetica', 'Arial', sans-serif
 	font-smoothing()
 	font-size 1.4rem
 
@@ -41,7 +42,7 @@ h1, h2
 	margin-bottom 1em
 
 p
-	margin-bottom 1em
+	margin-bottom .8em
 	line-height 120%
 
 p:last-child
@@ -96,6 +97,7 @@ a, a:hover, a:visited, a:focus
 }
 
 #loader
+	transition(all 300ms ease)
 	overflow hidden
 	position fixed
 	width 100%
@@ -129,47 +131,47 @@ header
 	#site-title
 		position fixed
 		width 100%
-		top 15px
+		top ($padding*2)
 		text-align center
 		z-index 1000
-		img
+		svg
 			display inline-block
-			+below($sm)
-				width 100px
-	.menu-item
-		transition(transform 1100ms $kinetic)
+			width 15%
+			min-width 220px
+			+below($md)
+				min-width 170px
+	#menu
 		position fixed
-		left 0px
+		bottom 28px
+		left 0
 		width 100%
 		text-align center
 		z-index 900
-		+above($sm + 1)
-			height 51vh
+		+below($md)
+			bottom 23px
+	.menu-item
+		height 7vh
+		display inline-block
+		margin 0 2vh
+		+below($tb)
+			height 8vw
+			margin 0 2vw
+		+below($md)
+			height 6vw
+			margin 0 2vw
+		+below($sm)
+			height 13vw
+			margin 0 2vw
 		svg
 			display inline-block
 			height 100%
-			fill $primary
-			stroke $secondary
-			stroke-width 4px
-			+below($sm)
-				height auto
-				width 80%
-	#menu-top
-		top 0
-		padding-top 13vh
-		transform(translate3d(0,-105%,0))
-		+below($sm)
-			padding-top 35vh
-	#menu-bottom
-		bottom 0
-		padding-bottom 13vh
-		transform(translate3d(0,105%,0))
-		+below($sm)
-			padding-bottom 35vh
+			fill $secondary
+	.menu-item:not(.active)
+		.underline
+			display none
 
 #container
-	transition(all 500ms ease)
-	transition-delay(900ms)
+	transition(opacity 300ms ease)
 	opacity 1
 	overflow hidden
 	height 100vh
@@ -233,72 +235,88 @@ header
 			border 1px solid rgba(0,0,0,0.2)
 
 footer
-	text-transform uppercase
 	position fixed
 	width 100%
-	bottom 15px
+	bottom ($padding/2)
 	text-align center
 	z-index 100
-	padding 0 15px
+	padding 0 $padding
 	flexbox()
 	justify-content center
 	align-items center
+	z-index 1000
 	div
 		margin 0 .7em
 
-body.menu-visible
-	#container
-		transition-delay(0ms)
-		//opacity 0
-		//visibility hidden
-	#menu-top, #menu-bottom
-		transition-delay(400ms)
-		transform(translate3d(0,0%,0))
-	.menu-item:hover
-		svg
-			fill $secondary
+body.loaded
+	#loader
+		opacity 0
+		visibility hidden
 
 body.loading
 	#container
 		transition-delay(0ms)
 		opacity 0
-		visibility hidden
-	#menu-top
-		transition-delay(0)
-		transform(translate3d(0,-105%,0))
-	#menu-bottom
-		transition-delay(0)
-		transform(translate3d(0,105%,0))
 
 body.home
+	#menu
+		+above($md + 1)
+			display none
 	#choose
-		margin-top 2em
 		text-align center
+		width 100%
+		+below($md)
+			display none
 		.menu-item:not(:first-child)
-			margin-top -.5rem
+			margin-top -2vh
+			+between($md + 1, $tb)
+				margin-top -1.5vw
 		.menu-item
 			display inline-block
-			width 80%
-			svg
+			height 35vh
+			max-height 335px
+			+above($md)
+				height 25vh
 				width 100%
+			+between($md + 1, $tb)
+				width 70%
+				height auto
+			svg
+				height 100%
 				stroke-width 2px
 				stroke $secondary
 				fill $primary
+				+between($md + 1, $tb)
+					width 100%
+					height auto
 		.menu-item:hover
 			svg
 				fill $secondary
 	#container
 		flexbox()
-		justify-content center
+		flex-direction column
+		justify-content space-between
 		align-items center
+		padding 57px 0 25px 0
+		+above($md)
+			justify-content center
 		.inner
-			width 50%
+			width 60%
+			max-width 800px
+			margin-bottom 2em
+			+below($sm)
+				width 100%
+				padding 0 $padding
 
 body.page
 	#container
-		overflow auto
+		overflow initial
 		.inner
-			padding 20rem 25%
+			padding 8rem 20% 15vh
+			+below($sm)
+				padding 57px $padding 15vh
+			+above($lg)
+				padding-top calc(3vw + 30px)
 			
 #outdated
 	display none
@@ -309,12 +327,14 @@ body.page
 	top 0
 	left 0
 	background $primary
-	z-index 600
+	z-index 900
 	a
 		border-bottom 1px solid
 	.inner
-		padding 20rem 25%
+		padding 8rem 20%
+		+above($lg)
+			padding-top calc(3vw + 30px)
 
-.no-js, .no-svg, .no-flexbox, no-csstransforms3d
+.no-js, .no-svg, .no-flexbox
 	#outdated
 		display block
