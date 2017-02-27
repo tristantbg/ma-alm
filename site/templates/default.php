@@ -1,6 +1,7 @@
 <?php snippet('header') ?>
 
 <div id="container">
+<<<<<<< HEAD
   <div id="target">
     <div id="top">
     	<div id="out-1" class="view out"></div>
@@ -17,16 +18,19 @@
 <?php 
 $collectionImg = $pages->find('home')->images()->shuffle();
 $thumbSize = 1000;
+=======
+>>>>>>> design-ui
 
-$collection = [];
-foreach($collectionImg as $key => $img):
-	$url = thumb($img, array('width'=> $thumbSize))->url();
-	array_push($collection, $url);
-endforeach;
-?>
+	<div class="inner">
+		<?= $page->text()->kt() ?>
+	</div>
+  
+</div>
 
 <script>
-	var collection = <?= json_encode($collection) ?>;
+	var collectionmode = false;
+	var instamode = false;
+	var $sitetitle = '<?= $site->title()->escape() ?>';
 </script>
 
 <?php snippet('footer') ?>

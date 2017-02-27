@@ -3,10 +3,11 @@
 @import '_mixins.styl'
 
 // Media queries
-$xl = 1600px
-$lg = 1260px
-$md = 1023px
-$sm = 767px
+$xl = 1500px
+$lg = 1100px
+$tb = 1024px
+$md = 767px
+$sm = 666px
 
 // Colors
 $primary ?= #fff
@@ -15,11 +16,12 @@ $accent ?= #ff0000
 
 // Metrics
 $padding = 10px
+$kinetic = cubic-bezier(0.77, 0, 0.175, 1)
 
 // CSS Reset
 global-reset()
 
-webfont('Franklin Gothic', 'franklingothic', true, 'bold')
+webfont('UniversLTStd', 'UniversLTStd', true, 'normal')
 
 body,html
 	width 100%
@@ -31,15 +33,32 @@ html
 
 body
 	text-rendering optimizeLegibility
+	font-family 'UniversLTStd', 'Helvetica', 'Arial', sans-serif
 	font-smoothing()
-	font-size 4rem
+	font-size 1.4rem
+
+h1, h2
+	text-transform uppercase
+	margin-bottom 1em
 
 p
-	margin-bottom 1em
-	line-height 100%
+	margin-bottom .8em
+	line-height 120%
 
 p:last-child
 	margin-bottom 0
+
+small
+	text-transform uppercase
+	font-size 1rem
+
+.grid-item.lazy
+	//transition(opacity, 250ms, ease)
+	backface()
+	opacity 0
+
+.grid-item.lazy.lazyloaded
+	opacity 1
 
 ::selection
 	background $secondary
@@ -56,17 +75,104 @@ a, a:hover, a:visited, a:focus
 	text-decoration none
 	cursor pointer
 
-.loader
+@keyframes rotate {
+    100% {
+        transform(rotate(360deg))
+    }
+}
+
+@keyframes dash {
+    0% {
+        stroke-dasharray: 1, 200;
+        stroke-dashoffset: 0
+    }
+    30% {
+        stroke-dasharray: 89, 200;
+        stroke-dashoffset: -35px
+    }
+    100% {
+        stroke-dasharray: 89, 200;
+        stroke-dashoffset: -124px
+    }
+}
+
+#loader
+	transition(all 300ms ease)
+	overflow hidden
 	position fixed
 	width 100%
 	height 100%
 	top 0
 	left 0
-	background $primary url('../../images/loader.gif') center no-repeat
-	background-size 15px
-	z-index 10000
+	background $primary
+	z-index 500
+	.spinner
+		width 50px
+		height 50px
+		align()
+		.circular
+			animation rotate 2s linear infinite
+			height 100%
+			transform-origin center center
+			width 100%
+			position absolute
+			top 0
+			bottom 0
+			left 0
+			right 0
+			margin auto
+			.path
+				stroke $secondary
+				stroke-dasharray 1, 200
+				stroke-dashoffset 0
+				animation dash 1.5s ease-in-out infinite, color 6s ease-in-out infinite
+
+header
+	#site-title
+		position fixed
+		width 100%
+		top ($padding*2)
+		text-align center
+		z-index 1000
+		svg
+			display inline-block
+			width 15%
+			min-width 220px
+			+below($md)
+				min-width 170px
+	#menu
+		position fixed
+		bottom 28px
+		left 0
+		width 100%
+		text-align center
+		z-index 900
+		+below($md)
+			bottom 23px
+	.menu-item
+		height 7vh
+		display inline-block
+		margin 0 2vh
+		+below($tb)
+			height 8vw
+			margin 0 2vw
+		+below($md)
+			height 6vw
+			margin 0 2vw
+		+below($sm)
+			height 13vw
+			margin 0 2vw
+		svg
+			display inline-block
+			height 100%
+			fill $secondary
+	.menu-item:not(.active)
+		.underline
+			display none
 
 #container
+	transition(opacity 300ms ease)
+	opacity 1
 	overflow hidden
 	height 100vh
 	width 100%
@@ -77,41 +183,162 @@ a, a:hover, a:visited, a:focus
 #proxy
 	display none
 
-#target 
+#target
+	width 400%
+	div.column
+		display block
+		float left
+		width 100vw
 	div.view
 		position relative
-		min-height 100vh
-		height 100vh
-		width 100%
+		min-height 200vh
+		height 200vh
 		overflow hidden
-		flexbox()
-		justify-content space-around
+		//flexbox()
+		//justify-content space-around
 		//align-items center
-		flex-wrap wrap
+		//flex-wrap wrap
 		.grid-item
-			display block
+			//display block
+			background-size cover
 			background-position center
 			background-repeat no-repeat
+			//border 1px solid rgba(0,0,0,0.1)
+		.grid-item.insta
+			//filter(grayscale(1))
+			text-align center
+			video
+				object-fit contain
+				width 100%
+				height 100%
+			img
+				display inline-block
+				max-width 100%
+				max-height 100%
+				align()
+		.grid-item.insta:hover
+			//filter(none)
 		.grid-item.contain
 			background-size contain
 		.grid-item.cover
 			background-size cover
-		.grid-item.w1
-			width 10%
-		.grid-item.w2
-			width 20%
-		.grid-item.w3
-			width 30%
-		.grid-item.w4
-			width 40%
-		.grid-item.h1
-			height 30%
-		.grid-item.h2
-			height 50%
-		.grid-item.h3
-			height 70%
-		.grid-item.h4
-			height 100%
-	div.black
-		background $secondary
-		color $primary
+
+#target.contain
+	div.view
+		.grid-item
+			background-size contain
+
+#target.contain.repeat
+	div.view
+		.grid-item
+			background-repeat repeat
+
+#target.outlines
+	div.view
+		.grid-item
+			border 1px solid rgba(0,0,0,0.2)
+
+footer
+	position fixed
+	width 100%
+	bottom ($padding/2)
+	text-align center
+	z-index 100
+	padding 0 $padding
+	flexbox()
+	justify-content center
+	align-items center
+	z-index 1000
+	div
+		margin 0 .7em
+
+body.loaded
+	#loader
+		opacity 0
+		visibility hidden
+
+body.loading
+	#container
+		transition-delay(0ms)
+		opacity 0
+
+body.home
+	#menu
+		+above($md + 1)
+			display none
+	#choose
+		text-align center
+		width 100%
+		+below($md)
+			display none
+		.menu-item:not(:first-child)
+			margin-top -2vh
+			+between($md + 1, $tb)
+				margin-top -1.5vw
+		.menu-item
+			display inline-block
+			height 35vh
+			max-height 335px
+			+above($tb + 1)
+				height 25vh
+				width 100%
+			+between($md + 1, $tb)
+				width 70%
+				height auto
+			svg
+				height 100%
+				stroke-width 2px
+				stroke $secondary
+				fill $primary
+				+between($md + 1, $tb)
+					width 100%
+					height auto
+		.menu-item:hover
+			svg
+				fill $secondary
+	#container
+		flexbox()
+		flex-direction column
+		justify-content space-between
+		align-items center
+		padding 57px 0 25px 0
+		+above($md)
+			justify-content center
+		.inner
+			width 60%
+			max-width 800px
+			margin-bottom 2em
+			+below($sm)
+				width 100%
+				padding 0 $padding
+
+body.page
+	#container
+		overflow initial
+		.inner
+			padding 8rem 20% 15vh
+			+below($sm)
+				padding 57px $padding 15vh
+			+above($lg)
+				padding-top calc(3vw + 30px)
+			
+#outdated
+	display none
+	text-align center
+	position fixed
+	width 100%
+	height 100%
+	top 0
+	left 0
+	background $primary
+	z-index 900
+	a
+		border-bottom 1px solid
+	.inner
+		padding 8rem 20%
+		+above($lg)
+			padding-top calc(3vw + 30px)
+
+.no-js, .no-svg, .no-flexbox
+	#outdated
+		display block

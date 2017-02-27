@@ -66,6 +66,13 @@ hideselect()
 	-webkit-user-drag none
 	outline 0
 
+backface()
+	transform(translateZ(0))
+	-webkit-backface-visibility: hidden;
+	-moz-backface-visibility: hidden;
+	-ms-backface-visibility: hidden;
+	-o-backface-visibility: hidden;
+
 dead-center(position)
 	position: position
 	top: 50%
@@ -85,9 +92,6 @@ vendor(prop, args)
 	-ms-{prop} args
 	-o-{prop} args
 	{prop} args
-	
-transition(what = all,time = 300ms,easing = ease)
-	vendor(transition,what time easing)
 
 filter(args)
 	vendor(filter,args)

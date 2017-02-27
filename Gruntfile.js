@@ -2,13 +2,9 @@ module.exports = function(grunt) {
     grunt.initConfig({
         concat: {
             plugins: {
-                src: ['site/plugins/oembed/assets/js/oembed.js', 'node_modules/instafeed.js/instafeed.min.js', 'node_modules/packery/dist/packery.pkgd.min.js', 'node_modules/gsap/src/minified/TweenMax.min.js', 'node_modules/gsap/src/minified/utils/Draggable.min.js', '../libraries/GSAP/ThrowPropsPlugin.min.js', 'lib/history.js/scripts/bundled/html4+html5/jquery.history.js',],
+                src: ['node_modules/gsap/src/minified/TweenMax.min.js', 'node_modules/gsap/src/minified/utils/Draggable.min.js', '../libraries/GSAP/ThrowPropsPlugin.min.js', 'lib/history.js/scripts/bundled/html4+html5/jquery.history.js', ],
                 dest: 'assets/js/plugins.concat.js'
-            },
-            js: {
-                src: ['assets/js/app.js'],
-                dest: 'assets/js/app.concat.js'
-            },
+            }
         },
         uglify: {
             plugins: {
@@ -16,7 +12,7 @@ module.exports = function(grunt) {
                 dest: 'assets/js/build/plugins.js'
             },
             build: {
-                src: 'assets/js/app.concat.js',
+                src: 'assets/js/app.js',
                 dest: 'assets/js/build/app.min.js',
                 options: {
                     sourceMap: true
@@ -36,19 +32,19 @@ module.exports = function(grunt) {
             }
         },
         cssmin: {
-          options: {
-            shorthandCompacting: true,
-            roundingPrecision: -1
-          },
-          target: {
-            files: {
-              'assets/css/build/build.min.css': ['lib/normalize-css/normalize.css', 'site/plugins/oembed/assets/css/oembed.css', 'assets/css/app.min.css']
+            options: {
+                shorthandCompacting: true,
+                roundingPrecision: -1
+            },
+            target: {
+                files: {
+                    'assets/css/build/build.min.css': ['lib/normalize-css/normalize.css', 'assets/css/app.min.css']
+                }
             }
-          }
         },
         watch: {
             js: {
-                files: ['lib/**/*.js', 'assets/js/**/!(app.min|app.concat).js'],
+                files: ['lib/**/*.js', 'assets/js/app.js'],
                 tasks: ['javascript'],
                 options: {
                     livereload: true,

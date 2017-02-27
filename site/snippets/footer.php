@@ -1,3 +1,11 @@
+<footer>
+	<div id="terms-of-use">
+	<small>
+	<a href="<?= $pages->find('terms-of-use')->url() ?>" data-target="page"><?= $pages->find('terms-of-use')->title()->html() ?></a>
+	</small>
+	</div>
+</footer>
+
 <?php if(!$site->googleanalytics()->empty()): ?>
   <!-- Google Analytics-->
   <script>
@@ -9,9 +17,7 @@
     ga('send', 'pageview');
   </script>
 <?php endif ?>
-	<script>
-		var $sitetitle = '<?= $site->title()->escape() ?>';
-	</script>
+
 	<?php
 	echo js(array('assets/js/build/plugins.js', 'assets/js/build/app.min.js'));
 	?>
