@@ -1,6 +1,7 @@
 /* globals $:false */
 var width = $(window).width(),
     height = $(window).height(),
+    target,
     l_in1, l_in2, l_out1, l_out2,
     r_in1, r_in2, r_out1, r_out2,
     ref, clone,
@@ -12,20 +13,32 @@ var width = $(window).width(),
     collection,
     instacollection = [],
     instaInit = true,
+    page = 1,
     idx = 0,
     num_photos = 20,
-    nextUrl = false,
+    apiUrl = false,
+    loadingPosts = false,
+    endOfPosts = false,
     $root = '/';
 $(function() {
     var app = {
         init: function() {
-            $(window).resize(function(event) {
+            window.addEventListener("resize", function() {
                 app.sizeSet();
                 if (!isMobile && typeof minBoxes !== typeof undefined && typeof maxBoxes !== typeof undefined) {
                     app.changeInside();
                     app.changeOutside();
                 }
             });
+            window.addEventListener("orientationchange", function() {
+                if (typeof minBoxes !== typeof undefined && typeof maxBoxes !== typeof undefined) {
+                    app.changeInside();
+                    app.changeOutside();
+                }
+            }, false);
+            window.addEventListener("touchstart touchend", function() {
+                target.focus();
+            }, false);
             $(document).ready(function($) {
                 $body = $('body');
                 app.sizeSet();
@@ -43,8 +56,8 @@ $(function() {
                     event.preventDefault();
                     var el = $(this);
                     if (el.parent().is('.menu-item')) {
-                      $('.menu-item.active').removeClass('active');
-                      el.parent().addClass('active');
+                        $('.menu-item.active').removeClass('active');
+                        el.parent().addClass('active');
                     }
                     var url = el.attr('href');
                     $body.addClass('loading');
@@ -62,14 +75,6 @@ $(function() {
                 r_out1 = document.getElementById('r-out-1');
                 r_out2 = document.getElementById('r-out-2');
                 clone = document.getElementById('clone');
-                // c_l_in1 = document.getElementById('c_l-in-1');
-                // c_l_in2 = document.getElementById('c_l-in-2');
-                // c_l_out1 = document.getElementById('c_l-out-1');
-                // c_l_out2 = document.getElementById('c_l-out-2');
-                // c_r_in1 = document.getElementById('c_r-in-1');
-                // c_r_in2 = document.getElementById('c_r-in-2');
-                // c_r_out1 = document.getElementById('c_r-out-1');
-                // c_r_out2 = document.getElementById('c_r-out-2');
                 if (instamode) {
                     app.getInstaImages();
                     app.startDrag();
@@ -79,7 +84,7 @@ $(function() {
                     maxBoxes = maxBoxes / 2;
                 }
                 if (collectionmode) {
-                    collection.all = collection.landscape.concat(collection.portrait);
+                    //collection.all = collection.landscape.concat(collection.portrait);
                     app.changeInside();
                     app.changeOutside();
                     app.startDrag();
@@ -95,62 +100,67 @@ $(function() {
             if (width <= 770 || Modernizr.touch) isMobile = true;
             if (isMobile) {
                 if (width >= 770) {
-                    //location.reload();
+                    location.reload();
                     isMobile = false;
                 }
             }
         },
         getInstaImages: function() {
-            if (instaInit) {
-                //nextUrl = 'https://api.instagram.com/v1/tags/' + hashtag + '/media/recent';
-                nextUrl = "https://app.dialogfeed.com/en/snippet/marques-almeida-8301.json?api_key=34f0ab0850234ba585cd68dc2cb6dedc";
-                instaInit = false;
-            }
-            console.log(nextUrl);
-            if (nextUrl) {
-                console.log("loadNext");
+            var apiUrl = "https://www.juicer.io/api/feeds/" + feedid;
+            if (apiUrl && !endOfPosts && !loadingPosts) {
+                //console.log("loadNext");
+                loadingPosts = true;
                 $.ajax({
-                    url: nextUrl,
+                    url: apiUrl,
                     dataType: 'JSON',
                     type: 'GET',
                     data: {
-                        //access_token: token,
-                        //count: num_photos
+                        per: 100,
+                        page: page
                     },
                     success: function(data) {
-                        console.log(data);
-                        for (var x = 0; x < data.news_feed.posts.post.length; x++) {
-                            var img = data.news_feed.posts.post[x].content.content_picture;
-                            if (typeof img !== typeof undefined) {
-                                instacollection.push(data.news_feed.posts.post[x].content.content_picture);
+                        //console.log(data);
+                        loadingPosts = false;
+                        if (data.posts.items.length > 0) {
+                            instacollection = instacollection.concat(data.posts.items);
+                            // for (var x = 0; x < data.posts.items.length; x++) {
+                            //     var img = data.posts.items[x].image;
+                            //     var video = data.posts.items[x].video;
+                            //     if (typeof video !== typeof undefined) {
+                            //         instacollection.push({
+                            //             'type': 'video',
+                            //             'image': img,
+                            //             'video': video
+                            //         });
+                            //     } else {
+                            //         instacollection.push({
+                            //             'type': 'image',
+                            //             'image': img
+                            //         });
+                            //     }
+                            // }
+                            //console.log('page:' + page);
+                            //console.log(instacollection);
+                            page++;
+                            if (instaInit) {
+                                app.changeInside();
+                                app.changeOutside();
+                                instaInit = false;
                             }
+                        } else {
+                            page = 1;
+                            //if (instacollection.length < 200) {
+                            endOfPosts = true;
+                            //} 
                         }
-                        for (var i = instacollection.length - 1; i >= 0; i--) {
-                            if (instacollection[i] === 'https://www.dialogfeed.com/wp-content/uploads/2015/03/FREE-TRIAL-POST-500HD1.png') {
-                                instacollection.splice(i, 1);
-                                //break;
-                            }
-                        }
-                        //console.log(instacollection);
-                        // if (typeof data.pagination.next_url !== typeof undefined) {
-                        //     nextUrl = data.pagination.next_url;
-                        // } else {
-                        nextUrl = false;
-                        //}
-                        app.changeInside();
-                        app.changeOutside();
                     },
                     error: function(data) {
                         console.log(data);
-                        alert("Too much requests...");
                     }
                 });
             }
         },
         changeInside: function(side) {
-            if (instamode) {
-                app.getInstaImages();
-            }
             app.fillWithChilds(l_in1, rand(minBoxes, maxBoxes));
             app.fillWithChilds(l_in2, rand(minBoxes, maxBoxes));
             app.fillWithChilds(r_in1, rand(minBoxes, maxBoxes));
@@ -163,9 +173,6 @@ $(function() {
             app.cloneColumns();
         },
         changeOutside: function(side) {
-            if (instamode) {
-                app.getInstaImages();
-            }
             app.fillWithChilds(l_out1, rand(minBoxes, maxBoxes));
             l_out2.innerHTML = l_out1.innerHTML;
             app.fillWithChilds(r_out1, rand(minBoxes, maxBoxes));
@@ -181,8 +188,8 @@ $(function() {
             clone.innerHTML = ref.innerHTML;
         },
         startDrag: function() {
-            var target = $("#target"),
-                proxy = $("#proxy"),
+            target = $("#target");
+            var proxy = $("#proxy"),
                 container = $("#container");
 
             function update() {
@@ -199,7 +206,7 @@ $(function() {
                     //console.log(positionY + ' OUT');
                     if (positionY < 0.1 && way < 0) {
                         if (!inChanged) {
-                            console.log('change IN');
+                            //console.log('change IN');
                             app.changeInside();
                             inChanged = true;
                         }
@@ -210,7 +217,7 @@ $(function() {
                     //console.log(positionY + ' IN');
                     if (positionY > 3 && positionY < 3.05) {
                         if (!outChanged) {
-                            console.log('change OUT');
+                            //console.log('change OUT');
                             app.changeOutside();
                             outChanged = true;
                         }
@@ -264,12 +271,20 @@ $(function() {
                     if (instamode) {
                         if (idx > instacollection.length - 1) {
                             idx = 0;
+                            app.getInstaImages();
                         }
-                        url = instacollection[idx];
+                        url = instacollection[idx].image;
                         child.className = 'grid-item insta';
                         child.setAttribute('style', 'background-image: url(' + url + '); position: absolute; top:' + y + 'px; left:' + x + 'px; height:' + hei + 'px; width:' + wid + 'px');
-                        //child.setAttribute('data-bg', url);
-                        //console.log(idx);
+                        // Display videos
+                        // if (instacollection[idx].video) {
+                        //   var video = document.createElement('video');
+                        //   video.setAttribute('src', instacollection[idx].video);
+                        //   video.setAttribute('autoplay', 'autoplay');
+                        //   video.setAttribute('muted', 'muted');
+                        //   video.setAttribute('loop', 'loop');
+                        //   child.appendChild(video);
+                        // }
                         idx++;
                     }
                     if (collectionmode) {

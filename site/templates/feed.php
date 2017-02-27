@@ -1,7 +1,7 @@
 <?php snippet('header') ?>
 
 <div id="container">
-  <div id="target" class="<?php e($page->contain()->bool(),'contain'); e($page->outlines()->bool(),' outlines'); e($page->repeat()->bool(),' repeat') ?>">
+  <div id="target" class="<?php e($page->contain()->bool(),'contain'); ?>">
   	<div id="reference">
 		<div id="col-1" class="column left">
 			<div id="l-out-1" class="view out"></div>
@@ -24,7 +24,7 @@
 <script>
 	var collectionmode = false;
 	var instamode = true;
-	var hashtag = "<?= $page->hashtag() ?>";
+	var feedid = "<?= $page->feedid() ?>";
 	var $sitetitle = '<?= $site->title()->escape() ?>';
 	var minBoxes = <?= $page->minboxes() ?>;
 	var maxBoxes = <?= $page->maxboxes() ?>;

@@ -5,7 +5,7 @@
 // Media queries
 $xl = 1500px
 $lg = 1100px
-$tb = 1023px
+$tb = 1024px
 $md = 767px
 $sm = 666px
 
@@ -207,6 +207,10 @@ header
 		.grid-item.insta
 			//filter(grayscale(1))
 			text-align center
+			video
+				object-fit contain
+				width 100%
+				height 100%
 			img
 				display inline-block
 				max-width 100%
@@ -275,7 +279,7 @@ body.home
 			display inline-block
 			height 35vh
 			max-height 335px
-			+above($md)
+			+above($tb + 1)
 				height 25vh
 				width 100%
 			+between($md + 1, $tb)
