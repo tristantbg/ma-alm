@@ -7,7 +7,7 @@ $xl = 1500px
 $lg = 1100px
 $tb = 1024px
 $md = 767px
-$sm = 666px
+$sm = 665px
 
 // Colors
 $primary ?= #fff
@@ -36,6 +36,8 @@ body
 	font-family 'UniversLTStd', 'Helvetica', 'Arial', sans-serif
 	font-smoothing()
 	font-size 1.4rem
+	+below($md)
+		font-size 1.3rem
 
 h1, h2
 	text-transform uppercase
@@ -147,12 +149,14 @@ header
 		width 100%
 		text-align center
 		z-index 900
+		pointer-events none
 		+below($md)
 			bottom 23px
 	.menu-item
 		height 7vh
 		display inline-block
 		margin 0 2vh
+		pointer-events auto
 		+below($tb)
 			height 8vw
 			margin 0 2vw
@@ -308,7 +312,7 @@ body.home
 			width 60%
 			max-width 800px
 			margin-bottom 2em
-			+below($sm)
+			+below($sm + 5)
 				width 100%
 				padding 0 $padding
 
@@ -317,7 +321,7 @@ body.page
 		overflow initial
 		.inner
 			padding 8rem 20% 15vh
-			+below($sm)
+			+below($sm + 5)
 				padding 57px $padding 15vh
 			+above($lg)
 				padding-top calc(3vw + 30px)

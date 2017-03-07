@@ -31,10 +31,12 @@ $(function() {
                 }
             });
             window.addEventListener("orientationchange", function() {
-                if (typeof minBoxes !== typeof undefined && typeof maxBoxes !== typeof undefined) {
-                    app.changeInside();
-                    app.changeOutside();
-                }
+                setTimeout(function() {
+                    if (typeof minBoxes !== typeof undefined && typeof maxBoxes !== typeof undefined) {
+                        app.changeInside();
+                        app.changeOutside();
+                    }
+                }, 200);
             }, false);
             window.addEventListener("touchstart touchend", function() {
                 target.focus();
@@ -43,8 +45,8 @@ $(function() {
                 $body = $('body');
                 app.sizeSet();
                 $body.on('click', '[data-target="index"]', function(event) {
-                    event.preventDefault();
-                    if ($body.attr('class') != 'home') {
+                    if ($body.attr('class') !== 'home loaded') {
+                        event.preventDefault();
                         var url = $(this).attr('href');
                         $body.addClass('loading');
                         setTimeout(function() {
@@ -93,6 +95,11 @@ $(function() {
                     $body.addClass('loaded');
                 });
             });
+            window.onpageshow = function(event) {
+                setTimeout(function() {
+                    $body.removeClass('loading').addClass('loaded');
+                }, 150);
+            };
         },
         sizeSet: function() {
             width = $(window).width();

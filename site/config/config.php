@@ -34,7 +34,10 @@ c::set('oembed.lazyvideo', true);
 c::set('sitemap.exclude', array('error'));
 c::set('sitemap.important', array('contact'));
 c::set('thumb.quality', 100);
-//c::set('thumbs.driver', 'im');
+//c::set('cdn.assets', 'http://d5js3b7xyg2de.cloudfront.net/assets');
+//c::set('cdn.content', 'http://d5js3b7xyg2de.cloudfront.net/content');
+//c::set('cdn.thumbs', 'http://d5js3b7xyg2de.cloudfront.net/thumbs');
+c::set('thumbs.driver', 'im');
 c::set('routes', array(
 	// array(
 	// 	'pattern' => 'info/(:any)',

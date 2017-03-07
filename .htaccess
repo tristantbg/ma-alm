@@ -1,4 +1,272 @@
+SetEnv PHP_VER 5_TEST
+SetEnv REGISTER_GLOBALS 0
 
+Options -Indexes
+
+<Files .htaccess|.ini>
+order allow,deny
+deny from all
+</Files>
+
+DirectoryIndex index.php
+DirectoryIndex index.html
+DirectoryIndex index.htm
+
+AddType application/x-httpd-php5 .php
+AddType application/x-httpd-php .html .htm
+AddType application/x-httpd-php .js
+AddType application/x-httpd-php .css
+
+<IfModule mod_rewrite.c>
+# action here
+</IfModule>
+
+<IfModule mod_mime.c>
+AddType text/css .css
+AddType application/x-javascript .js
+AddType text/x-component .htc
+AddType text/html .html .htm
+AddType text/richtext .rtf .rtx
+AddType image/svg+xml .svg .svgz
+AddType text/plain .txt
+AddType text/xsd .xsd
+AddType text/xsl .xsl
+AddType text/xml .xml
+AddType video/asf .asf .asx .wax .wmv .wmx
+AddType video/avi .avi
+AddType image/bmp .bmp
+AddType application/java .class
+AddType video/divx .divx
+AddType application/msword .doc .docx
+AddType application/vnd.ms-fontobject .eot
+AddType application/x-msdownload .exe
+AddType image/gif .gif
+AddType application/x-gzip .gz .gzip
+AddType image/x-icon .ico
+AddType image/jpeg .jpg .jpeg .jpe
+AddType application/vnd.ms-access .mdb
+AddType audio/midi .mid .midi
+AddType video/quicktime .mov .qt
+AddType audio/mpeg .mp3 .m4a
+AddType video/mp4 .mp4 .m4v
+AddType video/mpeg .mpeg .mpg .mpe
+AddType application/vnd.ms-project .mpp
+AddType application/x-font-otf .otf
+AddType application/vnd.oasis.opendocument.database .odb
+AddType application/vnd.oasis.opendocument.chart .odc
+AddType application/vnd.oasis.opendocument.formula .odf
+AddType application/vnd.oasis.opendocument.graphics .odg
+AddType application/vnd.oasis.opendocument.presentation .odp
+AddType application/vnd.oasis.opendocument.spreadsheet .ods
+AddType application/vnd.oasis.opendocument.text .odt
+AddType audio/ogg .ogg
+AddType application/pdf .pdf
+AddType image/png .png
+AddType application/vnd.ms-powerpoint .pot .pps .ppt .pptx
+AddType audio/x-realaudio .ra .ram
+AddType application/x-shockwave-flash .swf
+AddType application/x-tar .tar
+AddType image/tiff .tif .tiff
+AddType application/x-font-ttf .ttf .ttc
+AddType audio/wav .wav
+AddType audio/wma .wma
+AddType application/vnd.ms-write .wri
+AddType application/vnd.ms-excel .xla .xls .xlsx .xlt .xlw
+AddType application/zip .zip
+</IfModule>
+
+<IfModule mod_expires.c>
+ExpiresActive On
+ExpiresByType text/css A31536000
+ExpiresByType application/x-javascript A31536000
+ExpiresByType text/x-component A31536000
+ExpiresByType text/html A3600
+ExpiresByType text/richtext A3600
+ExpiresByType image/svg+xml A3600
+ExpiresByType text/plain A3600
+ExpiresByType text/xsd A3600
+ExpiresByType text/xsl A3600
+ExpiresByType text/xml A3600
+ExpiresByType video/asf A31536000
+ExpiresByType video/avi A31536000
+ExpiresByType image/bmp A31536000
+ExpiresByType application/java A31536000
+ExpiresByType video/divx A31536000
+ExpiresByType application/msword A31536000
+ExpiresByType application/vnd.ms-fontobject A31536000
+ExpiresByType application/x-msdownload A31536000
+ExpiresByType image/gif A31536000
+ExpiresByType application/x-gzip A31536000
+ExpiresByType image/x-icon A31536000
+ExpiresByType image/jpeg A31536000
+ExpiresByType application/vnd.ms-access A31536000
+ExpiresByType audio/midi A31536000
+ExpiresByType video/quicktime A31536000
+ExpiresByType audio/mpeg A31536000
+ExpiresByType video/mp4 A31536000
+ExpiresByType video/mpeg A31536000
+ExpiresByType application/vnd.ms-project A31536000
+ExpiresByType application/x-font-otf A31536000
+ExpiresByType application/vnd.oasis.opendocument.database A31536000
+ExpiresByType application/vnd.oasis.opendocument.chart A31536000
+ExpiresByType application/vnd.oasis.opendocument.formula A31536000
+ExpiresByType application/vnd.oasis.opendocument.graphics A31536000
+ExpiresByType application/vnd.oasis.opendocument.presentation A31536000
+ExpiresByType application/vnd.oasis.opendocument.spreadsheet A31536000
+ExpiresByType application/vnd.oasis.opendocument.text A31536000
+ExpiresByType audio/ogg A31536000
+ExpiresByType application/pdf A31536000
+ExpiresByType image/png A31536000
+ExpiresByType application/vnd.ms-powerpoint A31536000
+ExpiresByType audio/x-realaudio A31536000
+ExpiresByType image/svg+xml A31536000
+ExpiresByType application/x-shockwave-flash A31536000
+ExpiresByType application/x-tar A31536000
+ExpiresByType image/tiff A31536000
+ExpiresByType application/x-font-ttf A31536000
+ExpiresByType audio/wav A31536000
+ExpiresByType audio/wma A31536000
+ExpiresByType application/vnd.ms-write A31536000
+ExpiresByType application/vnd.ms-excel A31536000
+ExpiresByType application/zip A31536000
+</IfModule>
+
+# START Compression
+<IfModule mod_deflate.c>
+AddOutputFilterByType DEFLATE text/css text/plain text/html text/richtext
+AddOutputFilterByType DEFLATE text/javascript application/x-javascript application/javascript application/json
+AddOutputFilterByType DEFLATE text/x-component image/svg+xml text/xsd text/xsl text/xml image/x-icon
+</IfModule>
+# END Compression
+
+# START Expires
+<IfModule mod_expires.c>
+ExpiresActive On
+ExpiresDefault "access plus 2 hours"
+ExpiresByType image/gif "access plus 2 hours"
+ExpiresByType image/gif "access plus 2 hours"
+ExpiresByType image/png "access plus 2 hours"
+ExpiresByType image/jpg "access plus 2 hours"
+ExpiresByType image/jpeg "access plus 2 hours"
+ExpiresByType image/ico "access plus 2 hours"
+ExpiresByType text/css "access plus 2 hours"
+ExpiresByType text/javascript "access plus 2 hours"
+</IfModule>
+# END Expires
+
+# BEGIN Cache-Control Headers
+<ifModule mod_headers.c>
+<filesMatch "\.(ico|jpe?g|png|gif|swf)$">
+Header set Cache-Control "public"
+</filesMatch>
+<filesMatch "\.(css)$">
+Header set Cache-Control "public"
+</filesMatch>
+<filesMatch "\.(js)$">
+Header set Cache-Control "private"
+</filesMatch>
+<filesMatch "\.(x?html?|php)$">
+Header set Cache-Control "private, must-revalidate"
+</filesMatch>
+</ifModule>
+# END Cache-Control Headers
+
+# BEGIN Expire headers
+<ifModule mod_expires.c>
+ExpiresActive On
+ExpiresDefault "access plus 5 seconds"
+ExpiresByType image/x-icon "access plus 2592000 seconds"
+ExpiresByType image/jpeg "access plus 2592000 seconds"
+ExpiresByType image/png "access plus 2592000 seconds"
+ExpiresByType image/gif "access plus 2592000 seconds"
+ExpiresByType application/x-shockwave-flash "access plus 2592000 seconds"
+ExpiresByType text/css "access plus 604800 seconds"
+ExpiresByType text/javascript "access plus 1 week"
+ExpiresByType application/javascript "access plus 1 week"
+ExpiresByType application/x-javascript "access plus 1 week"
+ExpiresByType text/html "access plus 600 seconds"
+ExpiresByType application/xhtml+xml "access plus 600 seconds"
+</ifModule>
+# END Expire headers
+
+<FilesMatch "\.(ico|pdf|flv|jpg|jpeg|png|gif|js|css|swf)(\.gz)$">
+Header set Expires "Thu, 15 Apr 2015 20:00:00 GMT"
+</FilesMatch>
+
+<FilesMatch "\.(ico|pdf|flv|jpg|jpeg|png|gif|js|css|swf)(\.gz)?$">
+Header unset ETag
+FileETag None
+</FilesMatch>
+
+<FilesMatch "\.(avi|mov|mp3|wmv|wav)$">
+ExpiresDefault A29030400
+Header append Cache-Control "public"
+</FilesMatch>
+
+<IfModule mod_gzip.c>
+mod_gzip_on Yes
+mod_gzip_dechunk Yes
+mod_gzip_keep_workfiles No
+mod_gzip_can_negotiate Yes
+mod_gzip_add_header_count Yes
+mod_gzip_send_vary Yes
+mod_gzip_command_version '/mod_gzip_status'
+mod_gzip_min_http 1000
+mod_gzip_minimum_file_size 300
+mod_gzip_maximum_file_size 512000
+mod_gzip_maximum_inmem_size 60000
+mod_gzip_handle_methods GET POST
+mod_gzip_temp_dir /tmp
+mod_gzip_item_include file \.html$
+mod_gzip_item_include file \.php$
+mod_gzip_item_include file \.css$
+mod_gzip_item_include file \.js$
+mod_gzip_item_include mime ^application/javascript$
+mod_gzip_item_include mime ^application/x-javascript$
+mod_gzip_item_include mime ^text/.*
+mod_gzip_item_include handler ^application/x-httpd-php
+mod_gzip_item_exclude mime ^image/.*
+</IfModule>
+
+# By file extension
+SetEnvIfNoCase request_uri \.mdb$ gzip=9
+SetEnvIfNoCase request_uri \.bmp$ gzip cache-enable=mem
+SetEnvIfNoCase request_uri \.(?:jpg|gif|png|swf|avi|rm)$ no-gzip                           
+
+# By MIME type
+SetEnvIfNoCase mime text/.* gzip=9 cache-enable=mem
+SetEnvIfNoCase mime audio/wav gzip cache-enable=mem
+SetEnvIfNoCase mime image/bmp gzip cache-enable=mem
+SetEnvIfNoCase mime message/rfc822 gzip
+SetEnvIfNoCase mime application/msword gzip
+SetEnvIfNoCase mime application/postscript gzip
+SetEnvIfNoCase mime application/vnd.ms-excel gzip
+SetEnvIfNoCase mime application/vnd.ms-powerpoint gzip
+SetEnvIfNoCase mime application/vnd.ms-works gzip
+SetEnvIfNoCase mime application/x-javascript gzip cache-enable=mem
+SetEnvIfNoCase mime application/x-msaccess gzip
+SetEnvIfNoCase mime application/pdf gzip
+
+# Set expiry delta for static content.
+# Dynamic pages should set expiry delta by oneself.
+Header merge Cache-Control max-age=86400 env=cache-enable
+
+<IfModule mod_deflate.c>
+#The following line is enough for .js and .css
+AddOutputFilter DEFLATE js css
+#The following line also enables compression by file content type, for the following list of Content-Type:s
+AddOutputFilterByType DEFLATE text/html text/plain text/xml application/xml
+#The following lines are to avoid bugs with some browsers
+BrowserMatch ^Mozilla/4 gzip-only-text/html
+BrowserMatch ^Mozilla/4\.0[678] no-gzip
+BrowserMatch \bMSIE !no-gzip !gzip-only-text/html
+</IfModule>
+
+<IfModule mod_headers.c>
+<FilesMatch "\.(js|css|xml|gz)$">
+Header append Vary: Accept-Encoding
+</FilesMatch>
+</IfModule>
 
 # Kirby .htaccess
 

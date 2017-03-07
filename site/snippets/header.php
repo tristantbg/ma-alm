@@ -48,8 +48,8 @@
 	<?php endif ?>
 
 	<meta itemprop="description" content="<?= $site->description()->html() ?>">
-	<!-- <link rel="shortcut icon" href="<?php //url('assets/images/favicon.ico') ?>">
-	<link rel="icon" href="<?php //url('assets/images/favicon.ico') ?>" type="image/x-icon"> -->
+	<link rel="shortcut icon" href="">
+	<link rel="icon" href="" type="image/x-icon">
 
 	<?php 
 	echo css('assets/css/build/build.min.css');
@@ -70,7 +70,11 @@
 
 <header>
 	<div id="site-title">
-	<a href="<?= $site->url() ?>" data-target="index">
+	<?php if($page->isHomepage()): ?>
+	<a href="http://www.marquesalmeida.com" target="_blank" alt="Marques'Almeida Website">
+	<?php else: ?>
+	<a href="<?= $site->url() ?>" data-target="index" alt="Back to Intro">
+	<?php endif ?>
 	<svg version="1.1" id="Calque_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 viewBox="0 0 500 62" style="enable-background:new 0 0 500 62;" xml:space="preserve">
 	<g>
